@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Populo.CSharp", "Populo.CSharp.csproj", "{CA83926A-CC99-B9B0-5387-E60A4163DCE1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CA83926A-CC99-B9B0-5387-E60A4163DCE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA83926A-CC99-B9B0-5387-E60A4163DCE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA83926A-CC99-B9B0-5387-E60A4163DCE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA83926A-CC99-B9B0-5387-E60A4163DCE1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
