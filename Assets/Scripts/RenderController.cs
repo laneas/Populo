@@ -14,7 +14,7 @@ public class RenderController : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        drawGrass();
+        //drawGrass();
     }
 	
 	// Update is called once per frame

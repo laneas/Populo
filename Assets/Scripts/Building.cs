@@ -15,7 +15,7 @@ public abstract class Building : MonoBehaviour
     public int stoneCost = 0;
     public bool isSelected = false;
 
-	void Start ()
+	protected void Start ()
     {
         rb = model.GetComponent<Rigidbody2D>();
     }

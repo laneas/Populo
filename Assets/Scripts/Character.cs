@@ -7,7 +7,7 @@ public abstract class Character : MonoBehaviour
     //Utility variables
     public GameObject model;
     public Node objective;
-    public List<Node> path;
+    public List<Node> path = new List<Node>();
 
     private Rigidbody2D rb;
     private Animator an;
@@ -27,7 +27,7 @@ public abstract class Character : MonoBehaviour
     // Use this for initialization
 	protected void Start ()
     {
-        path = new List<Node>();
+        //path = new List<Node>();
         an = model.GetComponent<Animator>();
         rb = model.GetComponent<Rigidbody2D>();
         an.Play("idleSouth");
