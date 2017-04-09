@@ -4,18 +4,24 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour {
 
-    public GameObject camera;
+    public Camera camera;
+    public int speed = 1;
 
 	// Use this for initialization
 	void Start ()
     {
-		
+        camera = Camera.main;
 	}
 	
-	// Update is called once per frame
+	/*
+     * Update is called once per frame
+     * Gets input form ASDF keys and scroll button.
+     * Translate's camera by input, if any. 
+     */
 	void Update ()
     {
-        Vector2 move = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        Vector2 move = new Vector2(Input.GetAxis("Horizontal") * speed, Input.GetAxis("Vertical") * speed);
         camera.transform.Translate(move);
-	}
+        camera.orthographicSize += Input.GetAxis("Mouse ScrollWheel");
+    }
 }
