@@ -16,12 +16,12 @@ public class ObjectManager : MonoBehaviour
         monsters = new List<GameObject>();
         buildings = new List<GameObject>();
         pf = new Pathfinder();
-        //addBuilding(5, 1, "Stone Wall");
-        //addBuilding(5, 2, "Stone Wall");
-        //addBuilding(5, 3, "Stone Wall");
-        //addBuilding(5, 4, "Stone Wall");
-        //addVillager(1, 2, "Villager");
-        //villagers.ElementAt(0).GetComponent<Villager>().path.Add(new Node(10, 2, true));
+        addBuilding(5, 1, "Stone Wall");
+        addBuilding(5, 2, "Stone Wall");
+        addBuilding(5, 3, "Stone Wall");
+        addBuilding(5, 4, "Stone Wall");
+        addVillager(1, 2, "Villager");
+        villagers.ElementAt(0).GetComponent<Villager>().path.Add(new Node(10, 2, true));
     }
 	
 	
