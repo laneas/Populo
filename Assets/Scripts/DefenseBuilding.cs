@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class DefenseBuilding : Building
 {
+    public CircleCollider2D range;
+
     public int mgk = 0;
     public int atk = 0;
     public int spd = 1;
