@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
         currentVillagers = 0;
         foreach (GameObject obj in om.buildings)
         {
-            UtilityBuilding building= obj.GetComponent(typeof(UtilityBuilding)) as UtilityBuilding;
+            UtilityBuilding building = obj.GetComponent(typeof(UtilityBuilding)) as UtilityBuilding;
             if (building != null)
             {
                 maxWood += building.woodStorage;

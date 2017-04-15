@@ -10,6 +10,7 @@ public abstract class Character : MonoBehaviour
     public List<Node> path = new List<Node>();
 
     private Rigidbody2D rb;
+    private CircleCollider2D cc;
     private Animator an;
 
     private Vector2 currentVector;
@@ -30,6 +31,7 @@ public abstract class Character : MonoBehaviour
         //path = new List<Node>();
         an = model.GetComponent<Animator>();
         rb = model.GetComponent<Rigidbody2D>();
+        cc = model.GetComponent<CircleCollider2D>();
         an.Play("idleSouth");
 	}
 	
@@ -42,10 +44,6 @@ public abstract class Character : MonoBehaviour
             move();
         }
     }
-
-    public abstract void select();
-    public abstract void attack(Character character);
-    public abstract void die();
 
     /*
      * Given a Node, objective, move() will give the model's RigidBody a velocity
@@ -124,4 +122,16 @@ public abstract class Character : MonoBehaviour
             }
         }
     }
+
+    public void attack(Character character)
+    {
+        int phyDamage = this.atk - character.def;
+        if(phyDamage <= 0) { phyDamage = 1; }
+        int mgkDamage = this.mgk - character.wil;
+        if (mgkDamage < 0) { mgkDamage = 0; }
+        character.hp = character.hp - (phyDamage + mgkDamage);
+    }
+
+    public abstract void select();
+    public abstract void die();
 }

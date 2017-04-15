@@ -11,9 +11,12 @@ public class Monster : Character
         //Load additional animations here
     }
 
-    public override void attack(Character character)
+    public void attack(Building building)
     {
-        throw new NotImplementedException();
+        int phyDamage = this.atk - building.def;
+        if (phyDamage <= 0) { phyDamage = 1; }
+        int mgkDamage = this.mgk;
+        building.hp = building.hp - (phyDamage + mgkDamage);
     }
 
     public override void die()

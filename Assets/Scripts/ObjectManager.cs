@@ -21,17 +21,17 @@ public class ObjectManager : MonoBehaviour
         //addBuilding(5, 3, "Stone Wall");
         //addBuilding(5, 4, "Stone Wall");
         //addBuilding(10, 10, "Stone House");
-        //addVillager(1, 2, "Villager");
+        addVillager(4, 4, "Villager");
         //villagers.ElementAt(0).GetComponent<Villager>().path.Add(new Node(10, 2, true));
-        //addBuilding(0, 0, "Fire Tower");
-        //addMonster(1, 2, "Ent");
-        //monsters.ElementAt(0).GetComponent<Monster>().path.Add(new global::Node(1, 4, true));
+        addBuilding(1, 9, "Fire Tower");
+        addMonster(1, 2, "Ent");
+        monsters.ElementAt(0).GetComponent<Monster>().path.Add(new global::Node(1, 10, true));
     }
 	
 	
 	void Update ()
     {
-		
+        checkCollsions();
 	}
 
     public void addVillager(int x, int y, string type)
@@ -90,8 +90,79 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
-    public void checkCollsions(GameObject one, GameObject two)
+    public void checkCollsions()
     {
-        //todo
+        // Villagers x Monsters
+        foreach (GameObject vilObj in villagers)
+        {
+            Villager villager = vilObj.GetComponent(typeof (Villager)) as Villager;
+            BoxCollider2D villagerBounds = vilObj.GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
+            CircleCollider2D villagerRange = vilObj.GetComponent(typeof(CircleCollider2D)) as CircleCollider2D;
+            foreach (GameObject monObj in monsters)
+            {
+                Monster monster = monObj.GetComponent(typeof(Monster)) as Monster;
+                BoxCollider2D monsterBounds = monObj.GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
+                CircleCollider2D monsterRange = monObj.GetComponent(typeof(CircleCollider2D)) as CircleCollider2D;
+                if (villagerRange.bounds.Intersects(monsterBounds.bounds))
+                {
+                    villager.attack(monster);
+                }
+            }
+        }
+        // Monsters x Villagers
+        foreach (GameObject monObj in monsters)
+        {
+            Monster monster = monObj.GetComponent(typeof(Monster)) as Monster;
+            BoxCollider2D monsterBounds = monObj.GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
+            CircleCollider2D monsterRange = monObj.GetComponent(typeof(CircleCollider2D)) as CircleCollider2D;
+            foreach (GameObject vilObj in villagers)
+            {
+                Villager villager = vilObj.GetComponent(typeof(Villager)) as Villager;
+                BoxCollider2D villagerBounds = vilObj.GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
+                CircleCollider2D villagerRange = vilObj.GetComponent(typeof(CircleCollider2D)) as CircleCollider2D;
+                if (monsterRange.bounds.Intersects(villagerBounds.bounds))
+                {
+                    monster.attack(villager);
+                }
+            }
+        }
+        // Buildings x Monsters
+        foreach (GameObject buiObj in buildings)
+        {
+            DefenseBuilding building = buiObj.GetComponent(typeof(DefenseBuilding)) as DefenseBuilding;
+            BoxCollider2D buildingBounds = buiObj.GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
+            CircleCollider2D buildingRange = buiObj.GetComponent(typeof(CircleCollider2D)) as CircleCollider2D;
+
+            if (building != null)
+            {
+                foreach (GameObject monObj in monsters)
+                {
+                    Monster monster = monObj.GetComponent(typeof(Monster)) as Monster;
+                    BoxCollider2D monsterBounds = monObj.GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
+                    CircleCollider2D monsterRange = monObj.GetComponent(typeof(CircleCollider2D)) as CircleCollider2D;
+                    if (buildingRange.bounds.Intersects(monsterBounds.bounds))
+                    {
+                        building.attack(monster);
+                    }
+                }
+            }
+        }
+        // Monsters x Buildings
+        foreach (GameObject monObj in monsters)
+        {
+            Monster monster = monObj.GetComponent(typeof(Monster)) as Monster;
+            BoxCollider2D monsterBounds = monObj.GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
+            CircleCollider2D monsterRange = monObj.GetComponent(typeof(CircleCollider2D)) as CircleCollider2D;
+            foreach (GameObject buiObj in buildings)
+            {
+                Building building = buiObj.GetComponent(typeof(Building)) as Building;
+                BoxCollider2D buildingBounds = buiObj.GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
+                CircleCollider2D buildingRange = buiObj.GetComponent(typeof(CircleCollider2D)) as CircleCollider2D;
+                if (building != null)
+                {
+                    monster.attack(building);
+                }
+            }
+        }
     }
 }
