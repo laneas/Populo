@@ -16,6 +16,8 @@ public abstract class Character : MonoBehaviour
     private Vector2 currentVector;
     private Vector2 previousVector;
 
+    public bool isAttacking = false;
+
     //Characteristic variables
     public int hp  = 0; //Hit Points: how much damage a character can take before dying
     public int def = 0; //Defense: how much physical damage a character resists
@@ -125,11 +127,26 @@ public abstract class Character : MonoBehaviour
 
     public void attack(Character character)
     {
-        int phyDamage = this.atk - character.def;
-        if(phyDamage <= 0) { phyDamage = 1; }
-        int mgkDamage = this.mgk - character.wil;
-        if (mgkDamage < 0) { mgkDamage = 0; }
-        character.hp = character.hp - (phyDamage + mgkDamage);
+        if (!isAttacking)
+        {
+            IEnumerator attack = attackPrep(character);
+            StartCoroutine(attack);
+        }
+    }
+
+    public IEnumerator attackPrep(Character character)
+    {
+        while (true)
+        {
+            isAttacking = true;
+            yield return new WaitForSeconds((float)spd);
+            int phyDamage = this.atk - character.def;
+            if (phyDamage <= 0) { phyDamage = 1; }
+            int mgkDamage = this.mgk - character.wil;
+            if (mgkDamage < 0) { mgkDamage = 0; }
+            character.hp = character.hp - (phyDamage + mgkDamage);
+            isAttacking = false;
+        }
     }
 
     public abstract void select();

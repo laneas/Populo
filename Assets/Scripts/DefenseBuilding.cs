@@ -12,6 +12,8 @@ public class DefenseBuilding : Building
     public int spd = 1;
     public int rng = 1;
 
+    public bool isAttacking = false;
+
     // Use this for initialization
     protected new void Start ()
     {
@@ -25,13 +27,39 @@ public class DefenseBuilding : Building
 
 	}
 
-    public void attack(Character character)
+    /*Trash, but I'm keeping this just in case...
+     * 
+     * public void attack(Character character)
     {
         int phyDamage = this.atk - character.def;
         if (phyDamage <= 0) { phyDamage = 1; }
         int mgkDamage = this.mgk - character.wil;
         if (mgkDamage < 0) { mgkDamage = 0; }
         character.hp = character.hp - (phyDamage + mgkDamage);
+    }*/
+
+    public void attack(Character character)
+    {
+        if (!isAttacking)
+        {
+            IEnumerator attack = attackPrep(character);
+            StartCoroutine(attack);
+        }
+    }
+
+    private IEnumerator attackPrep(Character character)
+    {
+        while (true)
+        {
+            isAttacking = true;
+            yield return new WaitForSeconds((float)spd);
+            int phyDamage = this.atk - character.def;
+            if (phyDamage <= 0) { phyDamage = 1; }
+            int mgkDamage = this.mgk - character.wil;
+            if (mgkDamage < 0) { mgkDamage = 0; }
+            character.hp = character.hp - (phyDamage + mgkDamage);
+            isAttacking = false;
+        }
     }
 
     public override void select()

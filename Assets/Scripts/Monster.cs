@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Monster : Character
 {
+    public bool isAttackingBuilding = false;
+
     protected new void Start()
     {
         base.Start();
@@ -13,15 +15,30 @@ public class Monster : Character
 
     public void attack(Building building)
     {
-        int phyDamage = this.atk - building.def;
-        if (phyDamage <= 0) { phyDamage = 1; }
-        int mgkDamage = this.mgk;
-        building.hp = building.hp - (phyDamage + mgkDamage);
+        if (!isAttackingBuilding)
+        {
+            IEnumerator attack = attackPrep(building);
+            StartCoroutine(attack);
+        }
+    }
+
+    public IEnumerator attackPrep(Building building)
+    {
+        while (true)
+        {
+            isAttackingBuilding = true;
+            yield return new WaitForSeconds((float)spd);
+            int phyDamage = this.atk - building.def;
+            if (phyDamage <= 0) { phyDamage = 1; }
+            int mgkDamage = this.mgk;
+            building.hp = building.hp - (phyDamage + mgkDamage);
+            isAttackingBuilding = false;
+        }
     }
 
     public override void die()
     {
-        throw new NotImplementedException();
+        Destroy(this.model);
     }
 
     public override void select()

@@ -17,7 +17,7 @@ public class Villager : Character
 
     public override void die()
     {
-        throw new NotImplementedException();
+        Destroy(this.model);
     }
 
     public override void select()

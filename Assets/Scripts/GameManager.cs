@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Debug.Log("left click @ " + Input.mousePosition.x + ", " + Input.mousePosition.y);
-            leftClick = new global::Node((int)Input.mousePosition.x, (int)Input.mousePosition.y, true);
+            leftClick = new global::Node((int)(Input.mousePosition.x / 70), (int)(Input.mousePosition.y / 40), true);
 
             Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero);
@@ -99,8 +99,8 @@ public class GameManager : MonoBehaviour
         if (Input.GetButtonDown("Fire2"))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            Debug.Log("left click @ " + Input.mousePosition.x + ", " + Input.mousePosition.y);
-            leftClick = new global::Node((int)Input.mousePosition.x, (int)Input.mousePosition.y, true);
+            Debug.Log("right click @ " + Input.mousePosition.x + ", " + Input.mousePosition.y);
+            rightClick = new global::Node((int)(Input.mousePosition.x / 70), (int)(Input.mousePosition.y / 40), true);
 
             Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero);
@@ -123,8 +123,12 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Deselect");
-                    rightSelection = null;
+                    if (leftSelection.gameObject.tag.Equals("Villager"))
+                    {
+                        Debug.Log("move");
+                        leftSelection.gameObject.GetComponent<Villager>().path.Add(rightClick);
+                        //leftSelection.gameObject.GetComponent<Villager>().objective = rightClick;
+                    }
                 }
             }
         }

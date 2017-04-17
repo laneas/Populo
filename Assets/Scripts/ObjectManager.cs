@@ -22,9 +22,11 @@ public class ObjectManager : MonoBehaviour
         //addBuilding(5, 4, "Stone Wall");
         //addBuilding(10, 10, "Stone House");
         addVillager(4, 4, "Villager");
-        //villagers.ElementAt(0).GetComponent<Villager>().path.Add(new Node(10, 2, true));
+        //villagers.ElementAt(0).GetComponent<Villager>().path.Add(new Node(4, 8, true));
+        //villagers.ElementAt(0).GetComponent<Villager>().path.Add(new Node(8, 8, true));
+        //villagers.ElementAt(0).GetComponent<Villager>().path.Add(new Node(8, 4, true));
         addBuilding(1, 9, "Fire Tower");
-        addMonster(1, 2, "Ent");
+        addMonster(1, -5, "Ent");
         monsters.ElementAt(0).GetComponent<Monster>().path.Add(new global::Node(1, 10, true));
     }
 	
@@ -32,6 +34,7 @@ public class ObjectManager : MonoBehaviour
 	void Update ()
     {
         checkCollsions();
+        removeDead();
 	}
 
     public void addVillager(int x, int y, string type)
@@ -90,7 +93,7 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
-    public void checkCollsions()
+    private void checkCollsions()
     {
         // Villagers x Monsters
         foreach (GameObject vilObj in villagers)
@@ -158,11 +161,58 @@ public class ObjectManager : MonoBehaviour
                 Building building = buiObj.GetComponent(typeof(Building)) as Building;
                 BoxCollider2D buildingBounds = buiObj.GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
                 CircleCollider2D buildingRange = buiObj.GetComponent(typeof(CircleCollider2D)) as CircleCollider2D;
-                if (building != null)
+                if (building != null && monsterRange.bounds.Intersects(buildingBounds.bounds))
                 {
                     monster.attack(building);
                 }
             }
+        }
+    }
+
+    private void removeDead()
+    {
+        List<GameObject> deadVillagers = new List<GameObject>();
+        List<GameObject> deadMonsters = new List<GameObject>();
+        List<GameObject> deadBuildings = new List<GameObject>();
+
+        //Collect Dead
+        foreach (GameObject vilObj in villagers)
+        {
+            if (vilObj.GetComponent<Villager>().hp <= 0)
+            {
+                deadVillagers.Add(vilObj);
+            }
+        }
+        foreach (GameObject monObj in monsters)
+        {
+            if(monObj.GetComponent<Monster>().hp <= 0)
+            {
+                deadMonsters.Add(monObj);
+            }
+        }
+        foreach(GameObject buiObj in buildings)
+        {
+            if (buiObj.GetComponent<Building>().hp <= 0)
+            {
+                deadBuildings.Add(buiObj);
+            }
+        }
+
+        //Remove Dead
+        foreach(GameObject vilObj in deadVillagers)
+        {
+            villagers.Remove(vilObj);
+            Destroy(vilObj);
+        }
+        foreach (GameObject monObj in deadMonsters)
+        {
+            monsters.Remove(monObj);
+            Destroy(monObj);
+        }
+        foreach (GameObject buiObj in deadBuildings)
+        {
+            buildings.Remove(buiObj);
+            Destroy(buiObj);
         }
     }
 }
