@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2015
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Populo", "Populo.csproj", "{450B4B9A-A225-060B-FF71-0AA298FF8486}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Populo.CSharp", "Populo.CSharp.csproj", "{CA83926A-CC99-B9B0-5387-E60A4163DCE1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{450B4B9A-A225-060B-FF71-0AA298FF8486}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{450B4B9A-A225-060B-FF71-0AA298FF8486}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{450B4B9A-A225-060B-FF71-0AA298FF8486}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{450B4B9A-A225-060B-FF71-0AA298FF8486}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA83926A-CC99-B9B0-5387-E60A4163DCE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA83926A-CC99-B9B0-5387-E60A4163DCE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA83926A-CC99-B9B0-5387-E60A4163DCE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA83926A-CC99-B9B0-5387-E60A4163DCE1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

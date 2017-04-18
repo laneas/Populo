@@ -67,7 +67,8 @@ public class GameManager : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Debug.Log("left click @ " + Input.mousePosition.x + ", " + Input.mousePosition.y);
-            leftClick = new global::Node((int)(Input.mousePosition.x / 70), (int)(Input.mousePosition.y / 40), true);
+            Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            leftClick = new global::Node((int)pos.x, (int)pos.y, true);
 
             Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero);
@@ -75,22 +76,22 @@ public class GameManager : MonoBehaviour
             {
                 if (hit.collider.gameObject.tag.Equals("Villager"))
                 {
-                    Debug.Log("Villager was selected");
+                    //Debug.Log("Villager was selected");
                     leftSelection = hit.collider.gameObject;
                 }
                 else if (hit.collider.gameObject.tag.Equals("Monster"))
                 {
-                    Debug.Log("Monster was selected");
+                    //Debug.Log("Monster was selected");
                     leftSelection = hit.collider.gameObject;
                 }
                 else if (hit.collider.gameObject.tag.Equals("Building"))
                 {
-                    Debug.Log("Building Selected");
+                    //Debug.Log("Building Selected");
                     leftSelection = hit.collider.gameObject;
                 }
                 else
                 {
-                    Debug.Log("Deselect");
+                    //Debug.Log("Deselect");
                     leftSelection = null;
                 }
             }           
@@ -99,8 +100,9 @@ public class GameManager : MonoBehaviour
         if (Input.GetButtonDown("Fire2"))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            Debug.Log("right click @ " + Input.mousePosition.x + ", " + Input.mousePosition.y);
-            rightClick = new global::Node((int)(Input.mousePosition.x / 70), (int)(Input.mousePosition.y / 40), true);
+            //Debug.Log("right click @ " + Input.mousePosition.x + ", " + Input.mousePosition.y);
+            Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            rightClick = new global::Node((int)pos.x, (int)pos.y, true);
 
             Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero);
@@ -108,26 +110,26 @@ public class GameManager : MonoBehaviour
             {
                 if (hit.collider.gameObject.tag.Equals("Villager"))
                 {
-                    Debug.Log("Villager was selected");
+                    //Debug.Log("Villager was selected");
                     rightSelection = hit.collider.gameObject;
                 }
                 else if (hit.collider.gameObject.tag.Equals("Monster"))
                 {
-                    Debug.Log("Monster was selected");
+                    //Debug.Log("Monster was selected");
                     rightSelection = hit.collider.gameObject;
                 }
                 else if (hit.collider.gameObject.tag.Equals("Building"))
                 {
-                    Debug.Log("Building Selected");
+                    //Debug.Log("Building Selected");
                     rightSelection = hit.collider.gameObject;
                 }
                 else
                 {
                     if (leftSelection.gameObject.tag.Equals("Villager"))
                     {
-                        Debug.Log("move");
+                        //Debug.Log("move");
+                        leftSelection.gameObject.GetComponent<Villager>().path.Clear();
                         leftSelection.gameObject.GetComponent<Villager>().path.Add(rightClick);
-                        //leftSelection.gameObject.GetComponent<Villager>().objective = rightClick;
                     }
                 }
             }
