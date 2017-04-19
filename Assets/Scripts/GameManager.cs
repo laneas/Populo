@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public ObjectManager om;
+    public UIManager um;
     public int wave;
+    public int seconds = 0;
+    public int hours = 0;
 
     public GameObject leftSelection = null;
     public Node leftClick = null;
@@ -21,18 +25,50 @@ public class GameManager : MonoBehaviour
     public int currentFood = 0;
     public int currentVillagers = 0;
 
+    private bool increaseTimeOn = false;
+
     // Use this for initialization
-    void Start ()
+    void Start()
     {
-        
-	}
-	
-	// Update is called once per frame
-	void Update ()
+
+    }
+
+    // Update is called once per frame
+    void Update()
     {
+        if (!increaseTimeOn) { StartCoroutine(increaseTime()); }
         checkMouseClick();
         updatePlayerResources();
-	}
+    }
+
+    private void spawnWave(int delay)
+    {
+        //Get player resources
+        //Spawn enemies according to player status and time
+        //set paths
+    }
+
+    IEnumerator increaseTime()
+    {
+        increaseTimeOn = true;
+        yield return new WaitForSeconds(1);
+        seconds++;
+        if (seconds > 60)
+        {
+            hours++;
+            seconds = 0;
+        }
+        if (hours > 24)
+        {
+            hours = 0;
+        }
+        if (hours == 6)
+        {
+            wave++;
+        }
+
+        increaseTimeOn = false;
+    }
 
     private void updatePlayerResources()
     {
@@ -65,15 +101,16 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetButtonDown("Fire1"))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            Debug.Log("left click @ " + Input.mousePosition.x + ", " + Input.mousePosition.y);
+            //Debug.Log("left click @ " + Input.mousePosition.x + ", " + Input.mousePosition.y);
             Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             leftClick = new global::Node((int)pos.x, (int)pos.y, true);
-
-            Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero);
+            Vector3 mousePos = Input.mousePosition;
+            mousePos.z = -1;
+            Vector2 worldPoint = Camera.main.ScreenToWorldPoint(mousePos);//Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(pos, new Vector3(0, 0, -1), 1);
             if (hit.collider != null)
             {
+                Debug.Log(hit.collider.ToString());
                 if (hit.collider.gameObject.tag.Equals("Villager"))
                 {
                     //Debug.Log("Villager was selected");
@@ -92,22 +129,28 @@ public class GameManager : MonoBehaviour
                 else
                 {
                     //Debug.Log("Deselect");
+                    if (um.requestingBuild)
+                    {
+                        om.addBuilding(leftClick.x, leftClick.y, um.buildingType);
+                        um.requestingBuild = false;
+                    }
                     leftSelection = null;
                 }
-            }           
+            }
         }
 
         if (Input.GetButtonDown("Fire2"))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             //Debug.Log("right click @ " + Input.mousePosition.x + ", " + Input.mousePosition.y);
             Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             rightClick = new global::Node((int)pos.x, (int)pos.y, true);
-
-            Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero);
+            Vector3 mousePos = Input.mousePosition;
+            mousePos.z = -1;
+            Vector2 worldPoint = Camera.main.ScreenToWorldPoint(mousePos);//Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(pos, new Vector3(0, 0, -1), 1);
             if (hit.collider != null)
             {
+                Debug.Log(hit.collider.ToString());
                 if (hit.collider.gameObject.tag.Equals("Villager"))
                 {
                     //Debug.Log("Villager was selected");
