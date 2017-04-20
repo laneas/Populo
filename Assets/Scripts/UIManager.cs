@@ -23,6 +23,8 @@ public class UIManager : MonoBehaviour
     public GameObject blankPanel;
     public GameObject castleBuildPanel;
     public GameObject upgradePanel;
+    public GameObject characterPanel;
+    public GameObject gatherPanel;
 
 
     public bool requestingBuild = false;
@@ -38,6 +40,8 @@ public class UIManager : MonoBehaviour
         commandPanels.Add(blankPanel);
         commandPanels.Add(castleBuildPanel);
         commandPanels.Add(upgradePanel);
+        commandPanels.Add(characterPanel);
+        commandPanels.Add(gatherPanel);
 	}
 	
 	// Update is called once per frame
@@ -121,13 +125,19 @@ public class UIManager : MonoBehaviour
             case "Castle":
                 castleBuildPanel.SetActive(true);
                 break;
+            case "Character":
+                characterPanel.SetActive(true);
+                break;
+            case "Gather":
+                gatherPanel.SetActive(true);
+                break;
             default:
                 blankPanel.SetActive(true);
                 break;
         }
     }
 
-    private void hideCommandPanels()
+    public void hideCommandPanels()
     {
         foreach (GameObject panel in commandPanels)
         {
@@ -138,6 +148,48 @@ public class UIManager : MonoBehaviour
     public void upgradeButtonListener()
     {
         Debug.Log("Upgrade");
+    }
+
+    public void characterCommandListener(Button button)
+    {
+        if (button.name.Equals("MoveButton"))
+        {
+            
+        }
+        else if (button.name.Equals("GatherButton"))
+        {
+            switchCommandWindow("Gather");
+        }
+        else if (button.name.Equals("AttackButton"))
+        {
+            
+        }
+    }
+
+    public void gatherButtonListener(Button button)
+    {
+        Villager villager = gm.leftSelection.GetComponent(typeof(Villager)) as Villager;
+        if (villager != null)
+        {
+            villager.gatherZoneType = "";
+            villager.inGatherZone = false;
+            villager.isGathering = false;
+            if (button.name.Equals("WoodButton"))
+            {
+                villager.path.Clear();
+                villager.path.Add(new Node(90, 0, true));
+            }
+            else if (button.name.Equals("StoneButton"))
+            {
+                villager.path.Clear();
+                villager.path.Add(new Node(-90, 0, true));
+            }
+            else if (button.name.Equals("FoodButton"))
+            {
+                villager.path.Clear();
+                villager.path.Add(new Node(0, 90, true));
+            }
+        }
     }
 
     public void buildButtonListener(Button button)

@@ -40,7 +40,7 @@ public abstract class Character : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate ()
+	protected void FixedUpdate ()
     {
         if (path.Count != 0)
         {
@@ -77,11 +77,11 @@ public abstract class Character : MonoBehaviour
 
         if (objective != null)
         {
-            if (currentX < objective.x) { xVel = .5f; }
-            else if (currentX > objective.x) { xVel = -.5f; }
+            if (currentX < objective.x) { xVel = 1f; }
+            else if (currentX > objective.x) { xVel = -1f; }
             else { xVel = 0; }
-            if (currentY < objective.y) { yVel = .5f; }
-            else if (currentY > objective.y) { yVel = -.5f; }
+            if (currentY < objective.y) { yVel = 1f; }
+            else if (currentY > objective.y) { yVel = -1f; }
             else { yVel = 0; }
         }
 

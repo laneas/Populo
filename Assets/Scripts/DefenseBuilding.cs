@@ -11,6 +11,7 @@ public class DefenseBuilding : Building
     public int atk = 0;
     public int spd = 1;
     public int rng = 1;
+    public string villagerCost = "";
 
     public bool isAttacking = false;
 
@@ -26,17 +27,6 @@ public class DefenseBuilding : Building
     {
 
 	}
-
-    /*Trash, but I'm keeping this just in case...
-     * 
-     * public void attack(Character character)
-    {
-        int phyDamage = this.atk - character.def;
-        if (phyDamage <= 0) { phyDamage = 1; }
-        int mgkDamage = this.mgk - character.wil;
-        if (mgkDamage < 0) { mgkDamage = 0; }
-        character.hp = character.hp - (phyDamage + mgkDamage);
-    }*/
 
     public void attack(Character character)
     {

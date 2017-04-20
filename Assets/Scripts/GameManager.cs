@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     public int currentFood = 0;
     public int currentVillagers = 0;
 
+    private bool waveSpawned = false;
     private bool increaseTimeOn = false;
 
     // Use this for initialization
@@ -44,15 +45,37 @@ public class GameManager : MonoBehaviour
 
     private void spawnWave(int delay)
     {
-        //Get player resources
-        //Spawn enemies according to player status and time
-        //set paths
+        waveSpawned = true;
+        int numOfEnts = 10;//currentWood % 10;
+        for (int i = 0; i < numOfEnts; i++)
+        {
+            if (i % 4 == 0)
+            {
+                om.addMonster(0, 90, "Ent");
+                om.monsters[om.monsters.Count - 1].GetComponent<Monster>().path.Add(new Node(0, 0, true));
+            }
+            else if (i % 3 == 0)
+            {
+                om.addMonster(90, 0, "Ent");
+                om.monsters[om.monsters.Count - 1].GetComponent<Monster>().path.Add(new Node(0, 0, true));
+            }
+            else if (i % 2 == 0)
+            {
+                om.addMonster(0, -90, "Ent");
+                om.monsters[om.monsters.Count - 1].GetComponent<Monster>().path.Add(new Node(0, 0, true));
+            }
+            else
+            {
+                om.addMonster(-90, 0, "Ent");
+                om.monsters[om.monsters.Count - 1].GetComponent<Monster>().path.Add(new Node(0, 0, true));
+            }
+        }
     }
 
     IEnumerator increaseTime()
     {
         increaseTimeOn = true;
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(.5f);
         seconds++;
         if (seconds > 60)
         {
@@ -63,9 +86,17 @@ public class GameManager : MonoBehaviour
         {
             hours = 0;
         }
+        if (hours == 21)
+        {
+            if (!waveSpawned)
+            {
+                spawnWave(wave);
+            }
+        }
         if (hours == 6)
         {
             wave++;
+            waveSpawned = false;
         }
 
         increaseTimeOn = false;
@@ -123,7 +154,7 @@ public class GameManager : MonoBehaviour
                     {
                         leftSelection = hit.collider.gameObject;
                         um.showInfoPanel(hit.collider.gameObject);
-                        um.switchCommandWindow("");
+                        um.switchCommandWindow("Character");
                     }
                     else if (hit.collider.gameObject.tag.Equals("Monster"))
                     {
@@ -178,7 +209,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    if (leftSelection.gameObject.tag.Equals("Villager"))
+                    if (leftSelection != null && leftSelection.gameObject.tag.Equals("Villager"))
                     {
                         leftSelection.gameObject.GetComponent<Villager>().path.Clear();
                         leftSelection.gameObject.GetComponent<Villager>().path.Add(rightClick);

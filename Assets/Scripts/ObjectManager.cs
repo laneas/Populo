@@ -8,6 +8,9 @@ public class ObjectManager : MonoBehaviour
     public List<GameObject> villagers;
     public List<GameObject> monsters;
     public List<GameObject> buildings;
+    public GameObject foodZone;
+    public GameObject woodZone;
+    public GameObject stoneZone;
     public Pathfinder pf;
 	
 	void Start ()
@@ -17,8 +20,11 @@ public class ObjectManager : MonoBehaviour
         buildings = new List<GameObject>();
         pf = new Pathfinder();
         addBuilding(0, 0, "Castle");
-        addVillager(4, 4, "Villager");
-        //addMonster(1, -5, "Ent");
+        addVillager(-2, -1, "Villager");
+        addVillager(-1, -1, "Villager");
+        addVillager(0, -1, "Wizard");
+        addVillager(1, -1, "Villager");
+        addVillager(2, -1, "Villager");
         //monsters.ElementAt(0).GetComponent<Monster>().path.Add(new global::Node(1, 10, true));
     }
 	
@@ -47,8 +53,14 @@ public class ObjectManager : MonoBehaviour
                         villager.transform.Translate(new Vector2(x, y));
                         villagers.Add(villager);
                     }
-                    break;
+                    else if (type.Equals("Wizard"))
+                    {
+                        GameObject wizard = Instantiate(Resources.Load("Prefabs/Wizard", typeof(GameObject))) as GameObject;
+                        wizard.transform.Translate(new Vector2(x, y));
+                        villagers.Add(wizard);
+                    }
                     //Load others by type here
+                    break;
                 }
             }
         }    }
@@ -121,6 +133,73 @@ public class ObjectManager : MonoBehaviour
                 {
                     villager.attack(monster);
                 }
+            }
+        }
+        //Villagers x Buildings
+        foreach (GameObject vilObj in villagers)
+        {
+            Villager villager = vilObj.GetComponent(typeof(Villager)) as Villager;
+            BoxCollider2D villagerBounds = vilObj.GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
+            CircleCollider2D villagerRange = vilObj.GetComponentInChildren(typeof(CircleCollider2D)) as CircleCollider2D;
+            if (villager.currentFood > 0 || villager.currentWood > 0 || villager.currentStone > 0)
+            {
+                foreach (GameObject buiObj in buildings)
+                {
+                    UtilityBuilding uBuilding = buiObj.GetComponent(typeof(UtilityBuilding)) as UtilityBuilding;
+                    BoxCollider2D buildingBounds = buiObj.GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
+                    CircleCollider2D buildingRange = buiObj.GetComponentInChildren(typeof(CircleCollider2D)) as CircleCollider2D;
+                    if (uBuilding != null)
+                    {
+                        if (villagerRange.bounds.Intersects(buildingBounds.bounds))
+                        {
+                            if (uBuilding.currentFood < uBuilding.foodStorage)
+                            {
+                                uBuilding.currentFood += villager.currentFood;
+                                villager.currentFood = 0;
+                                if (uBuilding.currentFood > uBuilding.foodStorage) { uBuilding.currentFood = uBuilding.foodStorage; }
+                            }
+                            if (uBuilding.currentWood < uBuilding.woodStorage)
+                            {
+                                uBuilding.currentWood += villager.currentWood;
+                                villager.currentWood = 0;
+                                if (uBuilding.currentWood > uBuilding.woodStorage) { uBuilding.currentWood = uBuilding.woodStorage; }
+                            }
+                            if (uBuilding.currentStone < uBuilding.stoneStorage)
+                            {
+                                uBuilding.currentStone += villager.currentStone;
+                                villager.currentStone = 0;
+                                if (uBuilding.currentStone > uBuilding.stoneStorage) { uBuilding.currentStone = uBuilding.stoneStorage; }
+                            }
+                        }
+                    }
+                }
+            } 
+        }
+        //Villager x Zones
+        foreach (GameObject vilObj in villagers)
+        {
+            Villager villager = vilObj.GetComponent(typeof(Villager)) as Villager;
+            BoxCollider2D villagerBounds = vilObj.GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
+            CircleCollider2D villagerRange = vilObj.GetComponentInChildren(typeof(CircleCollider2D)) as CircleCollider2D;
+            if (villagerRange.bounds.Intersects(woodZone.GetComponent<BoxCollider2D>().bounds))
+            {
+                villager.inGatherZone = true;
+                villager.gatherZoneType = "Wood";
+            }
+            else if (villagerRange.bounds.Intersects(stoneZone.GetComponent<BoxCollider2D>().bounds))
+            {
+                villager.inGatherZone = true;
+                villager.gatherZoneType = "Stone";
+            }
+            else if (villagerRange.bounds.Intersects(foodZone.GetComponent<BoxCollider2D>().bounds))
+            {
+                villager.inGatherZone = true;
+                villager.gatherZoneType = "Food";
+            }
+            else
+            {
+                villager.inGatherZone = false;
+                villager.gatherZoneType = "";
             }
         }
         // Monsters x Villagers
