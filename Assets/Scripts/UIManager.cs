@@ -7,9 +7,22 @@ public class UIManager : MonoBehaviour
 {
     private GameManager gm;
 
+    //Resource Windows
     public Text timeUI;
+    public Text woodUI;
+    public Text stoneUI;
+    public Text foodUI;
+    public Text popUI;
 
+    //Info Windows
+    private List<GameObject> infoPanels = new List<GameObject>();
+    public GameObject characterInfoPanel;
+
+    //Command Windows
+    private List<GameObject> commandPanels = new List<GameObject>();
+    public GameObject blankPanel;
     public GameObject castleBuildPanel;
+    public GameObject upgradePanel;
 
 
     public bool requestingBuild = false;
@@ -19,13 +32,113 @@ public class UIManager : MonoBehaviour
 	void Start ()
     {
         gm = GetComponentInParent<GameManager>();
+
+        infoPanels.Add(characterInfoPanel);
+
+        commandPanels.Add(blankPanel);
+        commandPanels.Add(castleBuildPanel);
+        commandPanels.Add(upgradePanel);
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
         updateTime();
+        updateResouces();
 	}
+    
+    //-------------------------Update Driven Events-----------------------------------------------
+
+    private void updateResouces()
+    {
+        woodUI.text = gm.currentWood.ToString();
+        stoneUI.text = gm.currentStone.ToString();
+        foodUI.text = gm.currentFood.ToString();
+        popUI.text = gm.currentVillagers.ToString();
+    }
+
+    private void updateTime()
+    {
+        string hoursF = gm.hours.ToString();
+        string secondsF = gm.seconds.ToString();
+        if (gm.hours < 10) { hoursF = "0" + hoursF; }
+        if (gm.seconds < 10) { secondsF = "0" + secondsF; }
+        string timeString = hoursF + ":" + secondsF;
+        timeUI.text = timeString;
+    }
+
+    //---------------------Input Listeners------------------------------------
+
+    public void showInfoPanel(GameObject obj)
+    {
+        hideInfoPanels();
+        Character character = obj.GetComponent(typeof(Character)) as Character;
+        DefenseBuilding dBuilding = obj.GetComponent(typeof(DefenseBuilding)) as DefenseBuilding;
+        UtilityBuilding uBuilding = obj.GetComponent(typeof(UtilityBuilding)) as UtilityBuilding;
+        if (character != null)
+        {
+            characterInfoPanel.SetActive(true);
+            Text type = characterInfoPanel.transform.Find("TypeText").gameObject.GetComponent<Text>();
+            Text hp = characterInfoPanel.transform.Find("HPText").gameObject.GetComponent<Text>();
+            Text atk = characterInfoPanel.transform.Find("ATKText").gameObject.GetComponent<Text>();
+            Text def = characterInfoPanel.transform.Find("DEFText").gameObject.GetComponent<Text>();
+            Text mgk = characterInfoPanel.transform.Find("MGKText").gameObject.GetComponent<Text>();
+            Text wil = characterInfoPanel.transform.Find("WILText").gameObject.GetComponent<Text>();
+            Text spd = characterInfoPanel.transform.Find("SPDText").gameObject.GetComponent<Text>();
+            Text rng = characterInfoPanel.transform.Find("RNGText").gameObject.GetComponent<Text>();
+            type.text = character.type;
+            hp.text = character.hp+" / "+character.mhp;
+            atk.text = character.atk.ToString();
+            def.text = character.def.ToString();
+            mgk.text = character.mgk.ToString();
+            wil.text = character.wil.ToString();
+            spd.text = character.spd.ToString();
+            rng.text = character.rng.ToString();
+        }
+        else if (dBuilding != null)
+        {
+
+        }
+        else if (uBuilding != null)
+        {
+
+        }
+    }
+
+    private void hideInfoPanels()
+    {
+        foreach (GameObject panel in infoPanels)
+        {
+            panel.SetActive(false);
+        }
+    }
+
+    public void switchCommandWindow(string type)
+    {
+        hideCommandPanels();
+        switch (type)
+        {
+            case "Castle":
+                castleBuildPanel.SetActive(true);
+                break;
+            default:
+                blankPanel.SetActive(true);
+                break;
+        }
+    }
+
+    private void hideCommandPanels()
+    {
+        foreach (GameObject panel in commandPanels)
+        {
+            panel.SetActive(false);
+        }
+    }
+
+    public void upgradeButtonListener()
+    {
+        Debug.Log("Upgrade");
+    }
 
     public void buildButtonListener(Button button)
     {
@@ -51,15 +164,5 @@ public class UIManager : MonoBehaviour
     public void buildCancelButtonListener()
     {
         requestingBuild = false;
-    }
-
-    private void updateTime()
-    {
-        string hoursF = gm.hours.ToString();
-        string secondsF = gm.seconds.ToString();
-        if (gm.hours < 10) { hoursF = "0" + hoursF; }
-        if (gm.seconds < 10) { secondsF = "0" + secondsF; }
-        string timeString = hoursF + ":" + secondsF;
-        timeUI.text = timeString;
     }
 }

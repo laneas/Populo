@@ -16,16 +16,8 @@ public class ObjectManager : MonoBehaviour
         monsters = new List<GameObject>();
         buildings = new List<GameObject>();
         pf = new Pathfinder();
-        //addBuilding(5, 1, "Stone Wall");
-        //addBuilding(5, 2, "Stone Wall");
-        //addBuilding(5, 3, "Stone Wall");
-        //addBuilding(5, 4, "Stone Wall");
-        //addBuilding(10, 10, "Stone House");
-        //addVillager(4, 4, "Villager");
-        //villagers.ElementAt(0).GetComponent<Villager>().path.Add(new Node(4, 8, true));
-        //villagers.ElementAt(0).GetComponent<Villager>().path.Add(new Node(8, 8, true));
-        //villagers.ElementAt(0).GetComponent<Villager>().path.Add(new Node(8, 4, true));
-        //addBuilding(1, 7, "Stone House");
+        addBuilding(0, 0, "Castle");
+        addVillager(4, 4, "Villager");
         //addMonster(1, -5, "Ent");
         //monsters.ElementAt(0).GetComponent<Monster>().path.Add(new global::Node(1, 10, true));
     }
@@ -39,14 +31,27 @@ public class ObjectManager : MonoBehaviour
 
     public void addVillager(int x, int y, string type)
     {
-        if (type.Equals("Villager"))
+        foreach (GameObject obj in buildings)
         {
-            GameObject villager = Instantiate(Resources.Load("Prefabs/villagerMale", typeof(GameObject))) as GameObject;
-            villager.transform.Translate(new Vector2(x, y));
-            villagers.Add(villager);
-        }
-        //Load others by type here
-    }
+            //Search for Utility Buildings
+            UtilityBuilding building = obj.GetComponent(typeof(UtilityBuilding)) as UtilityBuilding;
+            if (building != null)
+            {
+                //Search for Utility Buildings that have open spaces
+                if (building.villagerStorage - building.currentVillagers >= 1)
+                {
+                    building.currentVillagers++;
+                    if (type.Equals("Villager"))
+                    {
+                        GameObject villager = Instantiate(Resources.Load("Prefabs/villagerMale", typeof(GameObject))) as GameObject;
+                        villager.transform.Translate(new Vector2(x, y));
+                        villagers.Add(villager);
+                    }
+                    break;
+                    //Load others by type here
+                }
+            }
+        }    }
 
     public void addMonster(int x, int y, string type)
     {
@@ -88,6 +93,12 @@ public class ObjectManager : MonoBehaviour
         else if (type.Equals("Fire Tower"))
         {
             GameObject building = Instantiate(Resources.Load("Prefabs/flametower", typeof(GameObject))) as GameObject;
+            building.transform.Translate(new Vector2(x, y));
+            buildings.Add(building);
+        }
+        else if (type.Equals("Castle"))
+        {
+            GameObject building = Instantiate(Resources.Load("Prefabs/castle", typeof(GameObject))) as GameObject;
             building.transform.Translate(new Vector2(x, y));
             buildings.Add(building);
         }

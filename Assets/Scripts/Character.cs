@@ -19,6 +19,8 @@ public abstract class Character : MonoBehaviour
     public bool isAttacking = false;
 
     //Characteristic variables
+    public string type;
+    public int mhp = 0; //Max Hit Points: how much health a character can have in total
     public int hp  = 0; //Hit Points: how much damage a character can take before dying
     public int def = 0; //Defense: how much physical damage a character resists
     public int atk = 0; //Attack: how much physical damage a character deals

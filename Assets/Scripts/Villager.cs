@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Villager : Character
 {
-    public string type;
     public string preReq;
     public int hunger;
 

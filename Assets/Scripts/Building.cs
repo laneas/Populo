@@ -8,6 +8,7 @@ public abstract class Building : MonoBehaviour
     private Rigidbody2D rb;
 
     public string type = "";
+    public int mhp = 0;
     public int hp = 0;
     public int def = 0;
     public int buildTime = 0;
