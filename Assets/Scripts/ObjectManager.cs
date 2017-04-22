@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ObjectManager : MonoBehaviour
 {
+    private GameManager gm;
     public List<GameObject> villagers;
     public List<GameObject> monsters;
     public List<GameObject> buildings;
@@ -15,6 +16,8 @@ public class ObjectManager : MonoBehaviour
 	
 	void Start ()
     {
+        gm = GetComponentInParent<GameManager>();
+
         villagers = new List<GameObject>();
         monsters = new List<GameObject>();
         buildings = new List<GameObject>();
@@ -34,6 +37,58 @@ public class ObjectManager : MonoBehaviour
         checkCollsions();
         removeDead();
 	}
+
+    public bool purchaseBuilding(Building building)
+    {
+        bool purchaseMade = false;
+        bool hasWood = false;
+        bool hasStone = false;
+        bool hasVillager = false;
+
+        if (building.woodCost <= gm.currentWood) { hasWood = true; }
+        if (building.stoneCost <= gm.currentStone) { hasStone = true; }
+        if (building.villagerCost.Equals(""))
+        {
+            hasVillager = true;
+        }
+        else
+        {
+            foreach (GameObject villager in villagers)
+            {
+                Villager v = villager.GetComponent(typeof(Villager)) as Villager;
+                if (v.type.Equals(building.villagerCost))
+                {
+                    hasVillager = true;
+                }
+            }
+        }
+        
+        if (hasWood && hasStone && hasVillager)
+        {
+            int woodCost = building.woodCost;
+            int stoneCost = building.stoneCost;
+            foreach (GameObject buiObj in buildings)
+            {
+                UtilityBuilding uBuilding = buiObj.GetComponent(typeof(UtilityBuilding)) as UtilityBuilding;
+                if (uBuilding != null)
+                {
+                    while (uBuilding.currentWood > 0 && woodCost > 0)
+                    {
+                        woodCost--;
+                        uBuilding.currentWood--;
+                    }
+                    while (uBuilding.currentStone > 0 && stoneCost > 0)
+                    {
+                        stoneCost--;
+                        uBuilding.currentStone--;
+                    }
+                }
+            }
+            purchaseMade = true;
+        }
+
+        return purchaseMade;
+    }
 
     public void addVillager(int x, int y, string type)
     {
@@ -78,42 +133,48 @@ public class ObjectManager : MonoBehaviour
     //***NOTE: We will need to later check the difference in y and adjust z so that walls appear behind when >y and <y when in front
     public void addBuilding(int x, int y, string type)
     {
+        GameObject building = null;
         if (type.Equals("Wood Wall"))
         {
-            GameObject building = Instantiate(Resources.Load("Prefabs/wallWood", typeof(GameObject))) as GameObject;
-            building.transform.Translate(new Vector2(x, y));
-            buildings.Add(building);
+            building = Instantiate(Resources.Load("Prefabs/wallWood", typeof(GameObject))) as GameObject;
         }
         else if (type.Equals("Stone Wall"))
         {
-            GameObject building = Instantiate(Resources.Load("Prefabs/wallStone", typeof(GameObject))) as GameObject;
-            building.transform.Translate(new Vector2(x, y));
-            buildings.Add(building);
+            building = Instantiate(Resources.Load("Prefabs/wallStone", typeof(GameObject))) as GameObject;
         }
         else if (type.Equals("Wood House"))
         {
-            GameObject building = Instantiate(Resources.Load("Prefabs/housesWood", typeof(GameObject))) as GameObject;
-            building.transform.Translate(new Vector2(x, y));
-            buildings.Add(building);
+            building = Instantiate(Resources.Load("Prefabs/housesWood", typeof(GameObject))) as GameObject;
         }
         else if (type.Equals("Stone House"))
         {
-            GameObject building = Instantiate(Resources.Load("Prefabs/housesStone", typeof(GameObject))) as GameObject;
-            building.transform.Translate(new Vector2(x, y));
-            buildings.Add(building);
+            building = Instantiate(Resources.Load("Prefabs/housesStone", typeof(GameObject))) as GameObject;
         }
         else if (type.Equals("Fire Tower"))
         {
-            GameObject building = Instantiate(Resources.Load("Prefabs/flametower", typeof(GameObject))) as GameObject;
-            building.transform.Translate(new Vector2(x, y));
-            buildings.Add(building);
+            building = Instantiate(Resources.Load("Prefabs/flametower", typeof(GameObject))) as GameObject;
         }
         else if (type.Equals("Castle"))
         {
-            GameObject building = Instantiate(Resources.Load("Prefabs/castle", typeof(GameObject))) as GameObject;
-            building.transform.Translate(new Vector2(x, y));
-            buildings.Add(building);
+            building = Instantiate(Resources.Load("Prefabs/castle", typeof(GameObject))) as GameObject;
         }
+
+        if (building != null)
+        {
+            Building buildingInfo = building.GetComponent(typeof(Building)) as Building;
+            bool result = purchaseBuilding(buildingInfo);
+            if (result)
+            {
+                building.transform.Translate(new Vector2(x, y));
+                buildings.Add(building);
+            }
+            else
+            {
+                Debug.Log("You broke bitch");
+                Destroy(building);
+            }
+        }
+        
     }
 
     private void checkCollsions()

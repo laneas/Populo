@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public ObjectManager om;
     public UIManager um;
+    public SpriteRenderer nightMask;
     public int wave;
     public int seconds = 0;
     public int hours = 0;
@@ -32,13 +33,14 @@ public class GameManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        hours = 6;
     }
 
     // Update is called once per frame
     void Update()
     {
         if (!increaseTimeOn) { StartCoroutine(increaseTime()); }
+        adjustLighting();
         checkMouseClick();
         updatePlayerResources();
     }
@@ -70,6 +72,42 @@ public class GameManager : MonoBehaviour
                 om.monsters[om.monsters.Count - 1].GetComponent<Monster>().path.Add(new Node(0, 0, true));
             }
         }
+    }
+
+    private void adjustLighting()
+    {
+        Color alpha = nightMask.color;
+        switch (this.hours)
+        {
+            case 19:
+            case 5:
+                alpha.a = .1f;
+                break;
+            case 20:
+            case 4:
+                alpha.a = .20f;
+                break;
+            case 21:
+            case 3:
+                alpha.a = .30f;
+                break;
+            case 22:
+            case 2:
+                alpha.a = .40f;
+                break;
+            case 23:
+            case 1:
+                alpha.a = .50f;
+                break;
+            case 24:
+            case 0:
+                alpha.a = .60f;
+                break;
+            default:
+                alpha.a = 0;
+                break;
+        }
+        nightMask.color = alpha;
     }
 
     IEnumerator increaseTime()

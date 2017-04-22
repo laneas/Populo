@@ -205,7 +205,7 @@ public class UIManager : MonoBehaviour
         }
         else if (button.name.Equals("BuildTowerButton"))
         {
-            buildingType = "Flame Tower";
+            buildingType = "Fire Tower";
         }
         else
         {

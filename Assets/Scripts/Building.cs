@@ -14,6 +14,7 @@ public abstract class Building : MonoBehaviour
     public int buildTime = 0;
     public int woodCost = 0;
     public int stoneCost = 0;
+    public string villagerCost = "";
     public bool isSelected = false;
 
 	protected void Start ()

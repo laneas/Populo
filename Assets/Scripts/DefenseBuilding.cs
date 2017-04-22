@@ -11,7 +11,6 @@ public class DefenseBuilding : Building
     public int atk = 0;
     public int spd = 1;
     public int rng = 1;
-    public string villagerCost = "";
 
     public bool isAttacking = false;
 
