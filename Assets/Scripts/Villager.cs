@@ -40,8 +40,16 @@ public class Villager : Character
     {
         if (woodCap == currentWood || stoneCap == currentStone || foodCap == currentFood)
         {
-            path.Clear();
+            if (path.Count > 0 && path[0].x != 0 && path[0].y != 0)
+            {
+                path.Clear();
+                objective = null;
+            }
             path.Add(new Node(0, 0, true));
+
+            model.transform.Translate(new Vector2(0, 0));
+
+
         }
     }
 
@@ -56,8 +64,8 @@ public class Villager : Character
 
     public IEnumerator gatherPrep(string material)
     {
-        while (true)
-        {
+        //while (true)
+        //{
             isGathering = true;
             yield return new WaitForSeconds((float)spd * 2);
             if (material.Equals("Wood") && currentWood < woodCap)
@@ -79,8 +87,9 @@ public class Villager : Character
             {
                 //ignore
             }
+            addXP(1);
             isGathering = false;
-        }
+        //}
     }
 
     public override void die()

@@ -25,10 +25,9 @@ public class ObjectManager : MonoBehaviour
         addBuilding(0, 0, "Castle");
         addVillager(-2, -1, "Villager");
         addVillager(-1, -1, "Villager");
-        addVillager(0, -1, "Wizard");
+        addVillager(0, -1, "Villager");
         addVillager(1, -1, "Villager");
         addVillager(2, -1, "Villager");
-        //monsters.ElementAt(0).GetComponent<Monster>().path.Add(new global::Node(1, 10, true));
     }
 	
 	
@@ -157,6 +156,14 @@ public class ObjectManager : MonoBehaviour
         else if (type.Equals("Castle"))
         {
             building = Instantiate(Resources.Load("Prefabs/castle", typeof(GameObject))) as GameObject;
+        }
+        else if (type.Equals("Arrow Tower"))
+        {
+            building = Instantiate(Resources.Load("Prefabs/arrowtower", typeof(GameObject))) as GameObject;
+        }
+        else if (type.Equals("Cannon Tower"))
+        {
+            building = Instantiate(Resources.Load("Prefabs/cannontower", typeof(GameObject))) as GameObject;
         }
 
         if (building != null)

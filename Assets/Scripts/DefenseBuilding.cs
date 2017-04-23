@@ -38,8 +38,8 @@ public class DefenseBuilding : Building
 
     private IEnumerator attackPrep(Character character)
     {
-        while (true)
-        {
+        //while (true)
+        //{
             isAttacking = true;
             yield return new WaitForSeconds((float)spd);
             int phyDamage = this.atk - character.def;
@@ -48,7 +48,7 @@ public class DefenseBuilding : Building
             if (mgkDamage < 0) { mgkDamage = 0; }
             character.hp = character.hp - (phyDamage + mgkDamage);
             isAttacking = false;
-        }
+        //}
     }
 
     public override void select()

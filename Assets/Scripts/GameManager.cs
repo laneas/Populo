@@ -45,6 +45,15 @@ public class GameManager : MonoBehaviour
         updatePlayerResources();
     }
 
+    public void wipeWave()
+    {
+        foreach(GameObject obj in om.monsters)
+        {
+            Monster mon = obj.GetComponent<Monster>();
+            mon.hp = 0;
+        }
+    }
+
     private void spawnWave(int delay)
     {
         waveSpawned = true;
@@ -115,7 +124,7 @@ public class GameManager : MonoBehaviour
         increaseTimeOn = true;
         yield return new WaitForSeconds(.5f);
         seconds++;
-        if (seconds > 60)
+        if (seconds > 59)
         {
             hours++;
             seconds = 0;
@@ -133,7 +142,8 @@ public class GameManager : MonoBehaviour
         }
         if (hours == 6)
         {
-            wave++;
+            if(waveSpawned){ wave++; }
+            wipeWave();
             waveSpawned = false;
         }
 

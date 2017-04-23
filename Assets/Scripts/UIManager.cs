@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
     //Info Windows
     private List<GameObject> infoPanels = new List<GameObject>();
     public GameObject characterInfoPanel;
+    public GameObject uBuildingInfoPanel;
 
     //Command Windows
     private List<GameObject> commandPanels = new List<GameObject>();
@@ -25,6 +26,7 @@ public class UIManager : MonoBehaviour
     public GameObject upgradePanel;
     public GameObject characterPanel;
     public GameObject gatherPanel;
+    public GameObject levelPanel;
 
 
     public bool requestingBuild = false;
@@ -36,12 +38,14 @@ public class UIManager : MonoBehaviour
         gm = GetComponentInParent<GameManager>();
 
         infoPanels.Add(characterInfoPanel);
+        infoPanels.Add(uBuildingInfoPanel);
 
         commandPanels.Add(blankPanel);
         commandPanels.Add(castleBuildPanel);
         commandPanels.Add(upgradePanel);
         commandPanels.Add(characterPanel);
         commandPanels.Add(gatherPanel);
+        commandPanels.Add(levelPanel);
 	}
 	
 	// Update is called once per frame
@@ -73,6 +77,62 @@ public class UIManager : MonoBehaviour
 
     //---------------------Input Listeners------------------------------------
 
+    public void showLevelPanel()
+    {
+        hideCommandPanels();
+        Character character = gm.leftSelection.GetComponentInParent(typeof(Character)) as Character;
+        Debug.Log("-->" + character.ToString());
+        if (character != null)
+        {
+            levelPanel.SetActive(true);
+            Text points = levelPanel.transform.Find("PointsText").gameObject.GetComponent<Text>();
+            Text health = levelPanel.transform.Find("HealthText").gameObject.GetComponent<Text>();
+            Text atk = levelPanel.transform.Find("ATKText").gameObject.GetComponent<Text>();
+            Text def = levelPanel.transform.Find("DEFText").gameObject.GetComponent<Text>();
+            Text mgk = levelPanel.transform.Find("MGKText").gameObject.GetComponent<Text>();
+            Text wil = levelPanel.transform.Find("WILText").gameObject.GetComponent<Text>();
+            points.text = "Points: "+character.freePoints;
+            health.text = "Max Health: " + character.mhp;
+            atk.text = "Attack        : " + character.atk;
+            def.text = "Defense     : " + character.def;
+            mgk.text = "Magic         : " + character.mgk;
+            wil.text = "Willpower   : " + character.wil;
+
+            Button wizard = levelPanel.transform.Find("WizardButton").gameObject.GetComponent<Button>();
+            Button archer = levelPanel.transform.Find("ArcherButton").gameObject.GetComponent<Button>();
+            Button warrior = levelPanel.transform.Find("WarriorButton").gameObject.GetComponent<Button>();
+            Button miner = levelPanel.transform.Find("MinerButton").gameObject.GetComponent<Button>();
+            Button farmer = levelPanel.transform.Find("FarmerButton").gameObject.GetComponent<Button>();
+            Button jack = levelPanel.transform.Find("LumberjackButton").gameObject.GetComponent<Button>();
+
+            if (character.type.Equals("Villager"))
+            {
+                wizard.gameObject.SetActive(true);
+                archer.gameObject.SetActive(true);
+                warrior.gameObject.SetActive(true);
+                miner.gameObject.SetActive(true);
+                farmer.gameObject.SetActive(true);
+                jack.gameObject.SetActive(true);
+            }
+            else
+            {
+                wizard.gameObject.SetActive(false);
+                archer.gameObject.SetActive(false);
+                warrior.gameObject.SetActive(false);
+                miner.gameObject.SetActive(false);
+                farmer.gameObject.SetActive(false);
+                jack.gameObject.SetActive(false);
+            }
+            Color green = new Color(.1f, .68f, .3f);
+            if (character.mgk > 18 && character.wil > 10) { wizard.image.color = green; }
+            if (character.atk > 20 && character.wil > 10) { archer.image.color = green; }
+            if (character.atk > 20 && character.def > 20) { warrior.image.color = green; }
+            if (character.def > 15) { miner.image.color = green; }
+            if (character.atk > 15) { jack.image.color = green; }
+            farmer.image.color = green;
+        }
+    }
+
     public void showInfoPanel(GameObject obj)
     {
         hideInfoPanels();
@@ -101,11 +161,41 @@ public class UIManager : MonoBehaviour
         }
         else if (dBuilding != null)
         {
-
+            characterInfoPanel.SetActive(true);
+            Text type = characterInfoPanel.transform.Find("TypeText").gameObject.GetComponent<Text>();
+            Text hp = characterInfoPanel.transform.Find("HPText").gameObject.GetComponent<Text>();
+            Text atk = characterInfoPanel.transform.Find("ATKText").gameObject.GetComponent<Text>();
+            Text def = characterInfoPanel.transform.Find("DEFText").gameObject.GetComponent<Text>();
+            Text mgk = characterInfoPanel.transform.Find("MGKText").gameObject.GetComponent<Text>();
+            Text wil = characterInfoPanel.transform.Find("WILText").gameObject.GetComponent<Text>();
+            Text spd = characterInfoPanel.transform.Find("SPDText").gameObject.GetComponent<Text>();
+            Text rng = characterInfoPanel.transform.Find("RNGText").gameObject.GetComponent<Text>();
+            type.text = dBuilding.type;
+            hp.text = dBuilding.hp + " / " + dBuilding.mhp;
+            atk.text = dBuilding.atk.ToString();
+            def.text = dBuilding.def.ToString();
+            mgk.text = dBuilding.mgk.ToString();
+            wil.text = "---";
+            spd.text = dBuilding.spd.ToString();
+            rng.text = dBuilding.rng.ToString();
         }
         else if (uBuilding != null)
         {
-
+            uBuildingInfoPanel.SetActive(true);
+            Text type = uBuildingInfoPanel.transform.Find("TypeText").gameObject.GetComponent<Text>();
+            Text hp = uBuildingInfoPanel.transform.Find("HPText").gameObject.GetComponent<Text>();
+            Text def = uBuildingInfoPanel.transform.Find("DEFText").gameObject.GetComponent<Text>();
+            Text wood = uBuildingInfoPanel.transform.Find("WoodText").gameObject.GetComponent<Text>();
+            Text stone = uBuildingInfoPanel.transform.Find("StoneText").gameObject.GetComponent<Text>();
+            Text vil = uBuildingInfoPanel.transform.Find("VilText").gameObject.GetComponent<Text>();
+            Text food = uBuildingInfoPanel.transform.Find("FoodText").gameObject.GetComponent<Text>();
+            type.text = uBuilding.type;
+            hp.text = uBuilding.hp + " / " + uBuilding.mhp;
+            def.text = uBuilding.def.ToString();
+            wood.text = uBuilding.currentWood+" / "+uBuilding.woodStorage;
+            stone.text = uBuilding.currentStone+" / "+uBuilding.stoneStorage;
+            vil.text = uBuilding.currentVillagers + " / " + uBuilding.villagerStorage;
+            food.text = uBuilding.currentFood + " / " + uBuilding.foodStorage;
         }
     }
 
@@ -131,6 +221,9 @@ public class UIManager : MonoBehaviour
             case "Gather":
                 gatherPanel.SetActive(true);
                 break;
+            case "Level":
+                levelPanel.SetActive(true);
+                break;
             default:
                 blankPanel.SetActive(true);
                 break;
@@ -150,19 +243,116 @@ public class UIManager : MonoBehaviour
         Debug.Log("Upgrade");
     }
 
+    public void levelButtonListener(Button button)
+    {
+        Character character = gm.leftSelection.GetComponentInParent(typeof(Character)) as Character;
+        if(character != null)
+        {
+            if (button.name.Equals("AddHealth"))
+            {
+                if (character.freePoints > 0)
+                {
+                    character.freePoints--;
+                    character.mhp++;
+                }
+                showLevelPanel();
+            }
+            else if (button.name.Equals("AddAttack"))
+            {
+                if (character.freePoints > 0)
+                {
+                    character.freePoints--;
+                    character.atk++;
+                }
+                showLevelPanel();
+            }
+            else if (button.name.Equals("AddDefense"))
+            {
+                if (character.freePoints > 0)
+                {
+                    character.freePoints--;
+                    character.def++;
+                }
+                showLevelPanel();
+            }
+            else if (button.name.Equals("AddMagic"))
+            {
+                if (character.freePoints > 0)
+                {
+                    character.freePoints--;
+                    character.mgk++;
+                }
+                showLevelPanel();
+            }
+            else if (button.name.Equals("AddWill"))
+            {
+                if (character.freePoints > 0)
+                {
+                    character.freePoints--;
+                    character.wil++;
+                }
+                showLevelPanel();
+            }
+        }
+    }
+
+    public void classButtonListener(Button button)
+    {
+        //.1f, .68f, .3f
+        if (button.name.Equals("WizardButton"))
+        {
+            if (button.image.color.r == .1f && button.image.color.g == .68f && button.image.color.b == .3f)
+            {
+                Debug.Log("Make Wizard");
+            }
+        }
+        else if (button.name.Equals("ArcherButton"))
+        {
+            if (button.image.color.r == .1f && button.image.color.g == .68f && button.image.color.b == .3f)
+            {
+                
+            }
+        }
+        else if (button.name.Equals("WarriorButton"))
+        {
+            if (button.image.color.r == .1f && button.image.color.g == .68f && button.image.color.b == .3f)
+            {
+
+            }
+        }
+        else if (button.name.Equals("MinerButton"))
+        {
+            if (button.image.color.r == .1f && button.image.color.g == .68f && button.image.color.b == .3f)
+            {
+                
+            }
+        }
+        else if (button.name.Equals("FarmerButton"))
+        {
+            if (button.image.color.r == .1f && button.image.color.g == .68f && button.image.color.b == .3f)
+            {
+                
+            }
+        }
+        else if (button.name.Equals("LumberjackButton"))
+        {
+            if (button.image.color.r == .1f && button.image.color.g == .68f && button.image.color.b == .3f)
+            {
+                
+            }
+        }
+    }
+
     public void characterCommandListener(Button button)
     {
-        if (button.name.Equals("MoveButton"))
+        if (button.name.Equals("UpgradeButton"))
         {
-            
+            //switchCommandWindow("Level");
+            showLevelPanel();
         }
         else if (button.name.Equals("GatherButton"))
         {
             switchCommandWindow("Gather");
-        }
-        else if (button.name.Equals("AttackButton"))
-        {
-            
         }
     }
 
@@ -205,7 +395,7 @@ public class UIManager : MonoBehaviour
         }
         else if (button.name.Equals("BuildTowerButton"))
         {
-            buildingType = "Fire Tower";
+            buildingType = "Arrow Tower";
         }
         else
         {
@@ -216,5 +406,6 @@ public class UIManager : MonoBehaviour
     public void buildCancelButtonListener()
     {
         requestingBuild = false;
+        hideCommandPanels();
     }
 }

@@ -8,6 +8,7 @@ public abstract class Character : MonoBehaviour
     public GameObject model;
     public Node objective;
     public List<Node> path = new List<Node>();
+    public List<IEnumerator> attacks = new List<IEnumerator>();
 
     private Rigidbody2D rb;
     private CircleCollider2D cc;
@@ -15,37 +16,65 @@ public abstract class Character : MonoBehaviour
 
     private Vector2 currentVector;
     private Vector2 previousVector;
+    public float lastX = 0;
+    public float lastY = 0;
+    public float curX = 0;
+    public float curY = 0;
 
+    public int checkCounter = 0;
+    public bool checkingDifference = false;
     public bool isAttacking = false;
+    public bool isMoving = false;
 
     //Characteristic variables
     public string type;
     public int mhp = 0; //Max Hit Points: how much health a character can have in total
-    public int hp  = 0; //Hit Points: how much damage a character can take before dying
+    public int hp = 0; //Hit Points: how much damage a character can take before dying
     public int def = 0; //Defense: how much physical damage a character resists
     public int atk = 0; //Attack: how much physical damage a character deals
     public int mgk = 0; //Magic: how much magical damage a character deals
     public int wil = 0; //Will: how much magical damage a character resists
     public int spd = 1; //Speed: how fast a character can move and attack
     public int rng = 1; //Range: how far a character's attack can reach
+    public int xp = 0;
+    public int freePoints = 0;
 
     // Use this for initialization
-	protected void Start ()
+    protected void Start()
     {
         //path = new List<Node>();
         an = model.GetComponent<Animator>();
         rb = model.GetComponent<Rigidbody2D>();
         cc = model.GetComponent<CircleCollider2D>();
+        curX = model.transform.position.x;
+        curY = model.transform.position.y;
         an.Play("idleSouth");
-	}
-	
-	// Update is called once per frame
-	protected void FixedUpdate ()
+    }
+
+    // Update is called once per frame
+    protected void FixedUpdate()
     {
         if (path.Count != 0)
         {
             objective = path[0];
             move();
+        }
+        findMoveDifference();
+    }
+
+    public void addXP(int xp)
+    {
+        this.xp += xp;
+        if (xp >= 100)
+        {
+            int freePoints = UnityEngine.Random.Range(1, 2 * wil);
+            mhp += 5;
+            atk += 1;
+            def += 1;
+            mgk += 1;
+            wil += 1;
+            hp = mhp;
+            xp = xp - 100;
         }
     }
 
@@ -65,18 +94,20 @@ public abstract class Character : MonoBehaviour
         float deltaY = 0;
         if (objective != null)
         {
-           deltaX = Mathf.Abs(currentX - objective.x);
-           deltaY = Mathf.Abs(currentY - objective.y);
+            deltaX = Mathf.Abs(currentX - objective.x);
+            deltaY = Mathf.Abs(currentY - objective.y);
         }
 
         if (deltaX < .1 && deltaY < .1)
         {
+            isMoving = false;
             objective = null;
             path.Remove(path[0]);
         }
 
         if (objective != null)
         {
+            isMoving = true;
             if (currentX < objective.x) { xVel = 1f; }
             else if (currentX > objective.x) { xVel = -1f; }
             else { xVel = 0; }
@@ -84,13 +115,36 @@ public abstract class Character : MonoBehaviour
             else if (currentY > objective.y) { yVel = -1f; }
             else { yVel = 0; }
         }
-
+        
         previousVector = currentVector;
         currentVector = new Vector2(xVel, yVel);
         rb.velocity = currentVector;
         if (previousVector != currentVector)
         {
             playAnimation(deltaX, deltaY);
+        }
+    }
+
+    public void checkIfStuck()
+    {
+        float deltaX = Mathf.Abs(curX - lastX);
+        Debug.Log("" + deltaX);
+        float deltaY = Mathf.Abs(curY - lastY);
+        Debug.Log("" + deltaY);
+        if (deltaX < .01)
+        {
+            Debug.Log("Horizontal movement blocked");
+            path.Insert(0, new Node(objective.x, objective.y + 1, true));
+        }
+        if (deltaY < .01)
+        {
+            Debug.Log("Vertical movement blocked");
+            rb.velocity = new Vector2(1, 0);
+            path.Insert(0, (new Node(objective.x + 1, objective.y, true)));
+        }
+        if (path.Count > 3)
+        {
+            path.RemoveAt(1);
         }
     }
 
@@ -132,14 +186,15 @@ public abstract class Character : MonoBehaviour
         if (!isAttacking)
         {
             IEnumerator attack = attackPrep(character);
+            attacks.Add(attack);
             StartCoroutine(attack);
         }
     }
 
     public IEnumerator attackPrep(Character character)
     {
-        while (true)
-        {
+        //while (true)
+        //{
             isAttacking = true;
             yield return new WaitForSeconds((float)spd);
             int phyDamage = this.atk - character.def;
@@ -147,7 +202,52 @@ public abstract class Character : MonoBehaviour
             int mgkDamage = this.mgk - character.wil;
             if (mgkDamage < 0) { mgkDamage = 0; }
             character.hp = character.hp - (phyDamage + mgkDamage);
+            addXP(10);
             isAttacking = false;
+        //}
+    }
+
+    public void stopAttacks()
+    {
+        foreach (IEnumerator attack in attacks)
+        {
+            StopCoroutine(attack);
+        }
+        attacks.Clear();
+    }
+
+    public void findMoveDifference()
+    {
+
+        IEnumerator find = prepFindMoveDifference();
+        StartCoroutine(find);
+    }
+
+    public IEnumerator prepFindMoveDifference()
+    {
+        if (!checkingDifference)
+        {
+            checkCounter++;
+            checkingDifference = true;
+            yield return new WaitForSeconds(0.5f);
+            if (checkCounter % 2 == 0)
+            {
+                curX = model.transform.position.x;
+                curY = model.transform.position.y;
+                if (isMoving)
+                {
+                    checkIfStuck();
+                }
+                //Debug.Log("Current: " + model.transform.position.x + " " + model.transform.position.y);
+            }
+            else
+            {
+                lastX = model.transform.position.x;
+                lastY = model.transform.position.y;
+                //Debug.Log("Previous: " + model.transform.position.x + " " + model.transform.position.y);
+            }
+            
+            checkingDifference = false;
         }
     }
 
