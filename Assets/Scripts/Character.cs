@@ -10,9 +10,9 @@ public abstract class Character : MonoBehaviour
     public List<Node> path = new List<Node>();
     public List<IEnumerator> attacks = new List<IEnumerator>();
 
-    private Rigidbody2D rb;
-    private CircleCollider2D cc;
-    private Animator an;
+    public Rigidbody2D rb;
+    public CircleCollider2D cc;
+    public Animator an;
 
     private Vector2 currentVector;
     private Vector2 previousVector;
@@ -45,7 +45,7 @@ public abstract class Character : MonoBehaviour
         //path = new List<Node>();
         an = model.GetComponent<Animator>();
         rb = model.GetComponent<Rigidbody2D>();
-        cc = model.GetComponent<CircleCollider2D>();
+        cc = model.GetComponentInChildren<CircleCollider2D>();
         curX = model.transform.position.x;
         curY = model.transform.position.y;
         an.Play("idleSouth");
@@ -108,11 +108,11 @@ public abstract class Character : MonoBehaviour
         if (objective != null)
         {
             isMoving = true;
-            if (currentX < objective.x) { xVel = 1f; }
-            else if (currentX > objective.x) { xVel = -1f; }
+            if (currentX < objective.x) { xVel = 2f; }
+            else if (currentX > objective.x) { xVel = -2f; }
             else { xVel = 0; }
-            if (currentY < objective.y) { yVel = 1f; }
-            else if (currentY > objective.y) { yVel = -1f; }
+            if (currentY < objective.y) { yVel = 2f; }
+            else if (currentY > objective.y) { yVel = -2f; }
             else { yVel = 0; }
         }
         
@@ -128,19 +128,20 @@ public abstract class Character : MonoBehaviour
     public void checkIfStuck()
     {
         float deltaX = Mathf.Abs(curX - lastX);
-        Debug.Log("" + deltaX);
+        //Debug.Log("" + deltaX);
         float deltaY = Mathf.Abs(curY - lastY);
-        Debug.Log("" + deltaY);
+        //Debug.Log("" + deltaY);
         if (deltaX < .01)
         {
-            Debug.Log("Horizontal movement blocked");
-            path.Insert(0, new Node(objective.x, objective.y + 1, true));
+            //Debug.Log("Horizontal movement blocked");
+            path.Insert(0, new Node(objective.x, objective.y + 2, true));
+            //model.transform.position = new Vector3(objective.)
         }
         if (deltaY < .01)
         {
-            Debug.Log("Vertical movement blocked");
+            //Debug.Log("Vertical movement blocked");
             rb.velocity = new Vector2(1, 0);
-            path.Insert(0, (new Node(objective.x + 1, objective.y, true)));
+            path.Insert(0, (new Node(objective.x + 2, objective.y, true)));
         }
         if (path.Count > 3)
         {
@@ -203,7 +204,10 @@ public abstract class Character : MonoBehaviour
             if (mgkDamage < 0) { mgkDamage = 0; }
             character.hp = character.hp - (phyDamage + mgkDamage);
             addXP(10);
-            isAttacking = false;
+            GameObject blood = Instantiate(Resources.Load("Prefabs/Blood", typeof(GameObject))) as GameObject;
+            blood.transform.position = new Vector3(character.curX, character.curY, blood.transform.position.z);
+        blood.GetComponent<ParticleSystem>().IsAlive(true);
+        isAttacking = false;
         //}
     }
 

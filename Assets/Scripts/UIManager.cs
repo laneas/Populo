@@ -81,7 +81,6 @@ public class UIManager : MonoBehaviour
     {
         hideCommandPanels();
         Character character = gm.leftSelection.GetComponentInParent(typeof(Character)) as Character;
-        Debug.Log("-->" + character.ToString());
         if (character != null)
         {
             levelPanel.SetActive(true);
@@ -104,6 +103,7 @@ public class UIManager : MonoBehaviour
             Button miner = levelPanel.transform.Find("MinerButton").gameObject.GetComponent<Button>();
             Button farmer = levelPanel.transform.Find("FarmerButton").gameObject.GetComponent<Button>();
             Button jack = levelPanel.transform.Find("LumberjackButton").gameObject.GetComponent<Button>();
+            Button builder = levelPanel.transform.Find("BuilderButton").gameObject.GetComponent<Button>();
 
             if (character.type.Equals("Villager"))
             {
@@ -113,6 +113,7 @@ public class UIManager : MonoBehaviour
                 miner.gameObject.SetActive(true);
                 farmer.gameObject.SetActive(true);
                 jack.gameObject.SetActive(true);
+                builder.gameObject.SetActive(true);
             }
             else
             {
@@ -122,14 +123,22 @@ public class UIManager : MonoBehaviour
                 miner.gameObject.SetActive(false);
                 farmer.gameObject.SetActive(false);
                 jack.gameObject.SetActive(false);
+                builder.gameObject.SetActive(false);
             }
             Color green = new Color(.1f, .68f, .3f);
+            Color red = new Color(1.0f, .36f, 0.0f);
             if (character.mgk > 18 && character.wil > 10) { wizard.image.color = green; }
+            else { wizard.image.color = red; }
             if (character.atk > 20 && character.wil > 10) { archer.image.color = green; }
+            else { archer.image.color = red; }
             if (character.atk > 20 && character.def > 20) { warrior.image.color = green; }
+            else { warrior.image.color = red; }
             if (character.def > 15) { miner.image.color = green; }
+            else { miner.image.color = red; }
             if (character.atk > 15) { jack.image.color = green; }
+            else { jack.image.color = red; }
             farmer.image.color = green;
+            builder.image.color = green;
         }
     }
 
@@ -199,6 +208,36 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void setupUpgradePanel()
+    {
+        Building bui = gm.leftSelection.GetComponent(typeof(Building)) as Building;
+        if (bui != null)
+        {
+            Text wood = upgradePanel.transform.Find("WoodCostText").gameObject.GetComponent<Text>();
+            Text stone = upgradePanel.transform.Find("StoneCostText").gameObject.GetComponent<Text>();
+            Text villager = upgradePanel.transform.Find("VilCostText").gameObject.GetComponent<Text>();
+
+            if (bui.type.Equals("Wood Wall"))
+            {
+                wood.text = "Wood Cost: 100";
+                stone.text = "Stone Cost: 300";
+                villager.text = "Villager Needed: Builder";
+            }
+            else if (bui.type.Equals("Wood House"))
+            {
+                wood.text = "Wood Cost: 100";
+                stone.text = "Stone Cost: 300";
+                villager.text = "Villager Needed: Builder";
+            }
+            else if (bui.type.Equals("Arrow Tower"))
+            {
+                wood.text = "Wood Cost: 100";
+                stone.text = "Stone Cost: 100";
+                villager.text = "Villager Needed: Archer";
+            }
+        }
+    }
+
     private void hideInfoPanels()
     {
         foreach (GameObject panel in infoPanels)
@@ -224,6 +263,18 @@ public class UIManager : MonoBehaviour
             case "Level":
                 levelPanel.SetActive(true);
                 break;
+            case "Wood Wall":
+                setupUpgradePanel();
+                upgradePanel.SetActive(true);
+                break;
+            case "Wood House":
+                setupUpgradePanel();
+                upgradePanel.SetActive(true);
+                break;
+            case "Arrow Tower":
+                setupUpgradePanel();
+                upgradePanel.SetActive(true);
+                break;
             default:
                 blankPanel.SetActive(true);
                 break;
@@ -240,7 +291,28 @@ public class UIManager : MonoBehaviour
 
     public void upgradeButtonListener()
     {
-        Debug.Log("Upgrade");
+        hideCommandPanels();
+        Building bui = gm.leftSelection.GetComponent(typeof(Building)) as Building;
+        if (bui != null)
+        {
+            if (bui.type.Equals("Wood Wall"))
+            {
+                if (gm.om.addBuilding((int)gm.leftSelection.transform.position.x, (int)gm.leftSelection.transform.position.y, "Stone Wall"))
+                {
+                    gm.leftSelection.GetComponent<Building>().hp = 0;
+                }
+            }
+            else if (bui.type.Equals("Wood House"))
+            {
+                gm.om.addBuilding((int)gm.leftSelection.transform.position.x, (int)gm.leftSelection.transform.position.y, "Stone House");
+                bui.hp = 0;
+            }
+            else if (bui.type.Equals("Arrow Tower"))
+            {
+                gm.om.addBuilding((int)gm.leftSelection.transform.position.x, (int)gm.leftSelection.transform.position.y, "Cannon Tower");
+                bui.hp = 0;
+            }
+        }
     }
 
     public void levelButtonListener(Button button)
@@ -298,49 +370,74 @@ public class UIManager : MonoBehaviour
 
     public void classButtonListener(Button button)
     {
-        //.1f, .68f, .3f
+        Villager villager = gm.leftSelection.GetComponentInParent(typeof(Villager)) as Villager;
         if (button.name.Equals("WizardButton"))
         {
             if (button.image.color.r == .1f && button.image.color.g == .68f && button.image.color.b == .3f)
             {
-                Debug.Log("Make Wizard");
+                villager.an.runtimeAnimatorController = Resources.Load("Prefabs/Wizard/Wizard", typeof(RuntimeAnimatorController)) as RuntimeAnimatorController;
+                villager.type = "Wizard";
+                villager.cc.radius = 5;
             }
         }
         else if (button.name.Equals("ArcherButton"))
         {
             if (button.image.color.r == .1f && button.image.color.g == .68f && button.image.color.b == .3f)
             {
-                
+                villager.an.runtimeAnimatorController = Resources.Load("Prefabs/Archer/Archer", typeof(RuntimeAnimatorController)) as RuntimeAnimatorController;
+                villager.type = "Archer";
+                villager.cc.radius = 5;
             }
         }
         else if (button.name.Equals("WarriorButton"))
         {
             if (button.image.color.r == .1f && button.image.color.g == .68f && button.image.color.b == .3f)
             {
-
+                villager.an.runtimeAnimatorController = Resources.Load("Prefabs/Warrior/Warrior", typeof(RuntimeAnimatorController)) as RuntimeAnimatorController;
+                villager.type = "Warrior";
+                villager.mhp += 10;
+                villager.atk += 10;
+                villager.def += 10;
             }
         }
         else if (button.name.Equals("MinerButton"))
         {
             if (button.image.color.r == .1f && button.image.color.g == .68f && button.image.color.b == .3f)
             {
-                
+                villager.an.runtimeAnimatorController = Resources.Load("Prefabs/Miner/Miner", typeof(RuntimeAnimatorController)) as RuntimeAnimatorController;
+                villager.type = "Miner";
+                villager.stoneCap = 200;
             }
         }
         else if (button.name.Equals("FarmerButton"))
         {
             if (button.image.color.r == .1f && button.image.color.g == .68f && button.image.color.b == .3f)
             {
-                
+                villager.an.runtimeAnimatorController = Resources.Load("Prefabs/Farmer/Farmer", typeof(RuntimeAnimatorController)) as RuntimeAnimatorController;
+                villager.type = "Farmer";
+                villager.foodCap = 200;
             }
         }
         else if (button.name.Equals("LumberjackButton"))
         {
             if (button.image.color.r == .1f && button.image.color.g == .68f && button.image.color.b == .3f)
             {
-                
+                villager.an.runtimeAnimatorController = Resources.Load("Prefabs/Lumberjack/Lumberjack", typeof(RuntimeAnimatorController)) as RuntimeAnimatorController;
+                villager.type = "Lumberjack";
+                villager.woodCap = 200;
             }
         }
+        else if (button.name.Equals("BuilderButton"))
+        {
+            if (button.image.color.r == .1f && button.image.color.g == .68f && button.image.color.b == .3f)
+            {
+                villager.an.runtimeAnimatorController = Resources.Load("Prefabs/Builder/Builder", typeof(RuntimeAnimatorController)) as RuntimeAnimatorController;
+                villager.type = "Builder";
+                villager.stoneCap = 100;
+                villager.woodCap = 100;
+            }
+        }
+        hideCommandPanels();
     }
 
     public void characterCommandListener(Button button)

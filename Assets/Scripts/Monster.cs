@@ -24,16 +24,19 @@ public class Monster : Character
 
     public IEnumerator attackPrep(Building building)
     {
-        while (true)
-        {
+        //while (true)
+        //{
             isAttackingBuilding = true;
             yield return new WaitForSeconds((float)spd);
             int phyDamage = this.atk - building.def;
             if (phyDamage <= 0) { phyDamage = 1; }
             int mgkDamage = this.mgk;
             building.hp = building.hp - (phyDamage + mgkDamage);
-            isAttackingBuilding = false;
-        }
+        GameObject blood = Instantiate(Resources.Load("Prefabs/Dirt", typeof(GameObject))) as GameObject;
+        blood.transform.position = new Vector3(curX, curY, blood.transform.position.z);
+        blood.GetComponent<ParticleSystem>().IsAlive(true);
+        isAttackingBuilding = false;
+        //}
     }
 
     public override void die()

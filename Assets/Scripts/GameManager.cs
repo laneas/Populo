@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public ObjectManager om;
     public UIManager um;
     public SpriteRenderer nightMask;
-    public int wave;
+    public int wave = 1;
     public int seconds = 0;
     public int hours = 0;
 
@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         hours = 6;
+        wave = 1;
     }
 
     // Update is called once per frame
@@ -57,27 +58,91 @@ public class GameManager : MonoBehaviour
     private void spawnWave(int delay)
     {
         waveSpawned = true;
-        int numOfEnts = 10;//currentWood % 10;
+        int numOfChickens = wave / 1;
+        if (numOfChickens < 1) { numOfChickens = 1; }
+        int numOfEnts = wave / 2;
+        if (numOfEnts < 1) { numOfEnts = 1; }
+        int numOfGolems = wave / 3;
+        if (numOfGolems < 1) { numOfGolems = 1; }
+        int counter = 0;
         for (int i = 0; i < numOfEnts; i++)
         {
-            if (i % 4 == 0)
+            if (counter == 0)
             {
+                counter++;
                 om.addMonster(0, 90, "Ent");
                 om.monsters[om.monsters.Count - 1].GetComponent<Monster>().path.Add(new Node(0, 0, true));
             }
-            else if (i % 3 == 0)
+            else if (counter == 1)
             {
+                counter++;
                 om.addMonster(90, 0, "Ent");
                 om.monsters[om.monsters.Count - 1].GetComponent<Monster>().path.Add(new Node(0, 0, true));
             }
-            else if (i % 2 == 0)
+            else if (counter == 2)
             {
+                counter++;
                 om.addMonster(0, -90, "Ent");
                 om.monsters[om.monsters.Count - 1].GetComponent<Monster>().path.Add(new Node(0, 0, true));
             }
             else
             {
+                counter = 0;
                 om.addMonster(-90, 0, "Ent");
+                om.monsters[om.monsters.Count - 1].GetComponent<Monster>().path.Add(new Node(0, 0, true));
+            }
+        }
+        for (int i = 0; i < numOfChickens; i++)
+        {
+            if (counter == 0)
+            {
+                counter++;
+                om.addMonster(0, 90, "Chicken");
+                om.monsters[om.monsters.Count - 1].GetComponent<Monster>().path.Add(new Node(0, 0, true));
+            }
+            else if (counter == 1)
+            {
+                counter++;
+                om.addMonster(90, 0, "Chicken");
+                om.monsters[om.monsters.Count - 1].GetComponent<Monster>().path.Add(new Node(0, 0, true));
+            }
+            else if (counter == 2)
+            {
+                counter++;
+                om.addMonster(0, -90, "Chicken");
+                om.monsters[om.monsters.Count - 1].GetComponent<Monster>().path.Add(new Node(0, 0, true));
+            }
+            else
+            {
+                counter = 0;
+                om.addMonster(-90, 0, "Chicken");
+                om.monsters[om.monsters.Count - 1].GetComponent<Monster>().path.Add(new Node(0, 0, true));
+            }
+        }
+        for (int i = 0; i < numOfGolems; i++)
+        {
+            if (counter == 0)
+            {
+                counter++;
+                om.addMonster(0, 90, "Golem");
+                om.monsters[om.monsters.Count - 1].GetComponent<Monster>().path.Add(new Node(0, 0, true));
+            }
+            else if (counter == 1)
+            {
+                counter++;
+                om.addMonster(90, 0, "Golem");
+                om.monsters[om.monsters.Count - 1].GetComponent<Monster>().path.Add(new Node(0, 0, true));
+            }
+            else if (counter == 2)
+            {
+                counter++;
+                om.addMonster(0, -90, "Golem");
+                om.monsters[om.monsters.Count - 1].GetComponent<Monster>().path.Add(new Node(0, 0, true));
+            }
+            else
+            {
+                counter = 0;
+                om.addMonster(-90, 0, "Golem");
                 om.monsters[om.monsters.Count - 1].GetComponent<Monster>().path.Add(new Node(0, 0, true));
             }
         }
@@ -124,6 +189,10 @@ public class GameManager : MonoBehaviour
         increaseTimeOn = true;
         yield return new WaitForSeconds(.5f);
         seconds++;
+        if (seconds == 30)
+        {
+            om.heal();
+        }
         if (seconds > 59)
         {
             hours++;
@@ -132,6 +201,10 @@ public class GameManager : MonoBehaviour
         if (hours > 24)
         {
             hours = 0;
+        }
+        if (hours == 19 && seconds == 0)
+        {
+
         }
         if (hours == 21)
         {
@@ -142,7 +215,11 @@ public class GameManager : MonoBehaviour
         }
         if (hours == 6)
         {
-            if(waveSpawned){ wave++; }
+            if(waveSpawned)
+            {
+                wave++;
+                om.populate();
+            }
             wipeWave();
             waveSpawned = false;
         }

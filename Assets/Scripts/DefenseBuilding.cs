@@ -47,7 +47,10 @@ public class DefenseBuilding : Building
             int mgkDamage = this.mgk - character.wil;
             if (mgkDamage < 0) { mgkDamage = 0; }
             character.hp = character.hp - (phyDamage + mgkDamage);
-            isAttacking = false;
+        GameObject blood = Instantiate(Resources.Load("Prefabs/Blood", typeof(GameObject))) as GameObject;
+        blood.transform.position = new Vector3(character.curX, character.curY, blood.transform.position.z);
+        blood.GetComponent<ParticleSystem>().IsAlive(true);
+        isAttacking = false;
         //}
     }
 

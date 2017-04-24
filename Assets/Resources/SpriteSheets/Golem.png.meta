@@ -1,9 +1,25 @@
 fileFormatVersion: 2
 guid: 1993a2219277c3443af8b5aba9bd2cef
-timeCreated: 1492813111
+timeCreated: 1492992377
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: Golem_0
+    21300002: Golem_1
+    21300004: Golem_2
+    21300006: Golem_3
+    21300008: Golem_4
+    21300010: Golem_5
+    21300012: Golem_6
+    21300014: Golem_7
+    21300016: Golem_8
+    21300018: Golem_9
+    21300020: Golem_10
+    21300022: Golem_11
+    21300024: Golem_12
+    21300026: Golem_13
+    21300028: Golem_14
+    21300030: Golem_15
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -92,7 +108,215 @@ TextureImporter:
     overridden: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Golem_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 117
+        width: 41
+        height: 39
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Golem_1
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 117
+        width: 41
+        height: 39
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Golem_2
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 117
+        width: 41
+        height: 39
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Golem_3
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 117
+        width: 41
+        height: 39
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Golem_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 78
+        width: 41
+        height: 39
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Golem_5
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 78
+        width: 41
+        height: 39
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Golem_6
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 78
+        width: 41
+        height: 39
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Golem_7
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 78
+        width: 41
+        height: 39
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Golem_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 39
+        width: 41
+        height: 39
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Golem_9
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 39
+        width: 41
+        height: 39
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Golem_10
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 39
+        width: 41
+        height: 39
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Golem_11
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 39
+        width: 41
+        height: 39
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Golem_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 41
+        height: 39
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Golem_13
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 0
+        width: 41
+        height: 39
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Golem_14
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 0
+        width: 41
+        height: 39
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Golem_15
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 0
+        width: 41
+        height: 39
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
     outline: []
   spritePackingTag: 
   userData: 

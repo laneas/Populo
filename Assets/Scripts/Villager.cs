@@ -17,7 +17,7 @@ public class Villager : Character
 
     public string gatherZoneType = "";
     public bool inGatherZone = false;
-
+    public bool isReturning = false;
     public bool isGathering = false;
 
     protected new void Start()
@@ -40,16 +40,16 @@ public class Villager : Character
     {
         if (woodCap == currentWood || stoneCap == currentStone || foodCap == currentFood)
         {
-            if (path.Count > 0 && path[0].x != 0 && path[0].y != 0)
+            if (!isReturning)
             {
                 path.Clear();
-                objective = null;
+                path.Add(new global::Node(0, 0, true));
             }
-            path.Add(new Node(0, 0, true));
-
-            model.transform.Translate(new Vector2(0, 0));
-
-
+            isReturning = true;
+        }
+        else
+        {
+            isReturning = false;
         }
     }
 

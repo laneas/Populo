@@ -13,8 +13,8 @@ public class ObjectManager : MonoBehaviour
     public GameObject woodZone;
     public GameObject stoneZone;
     public Pathfinder pf;
-	
-	void Start ()
+
+    void Start()
     {
         gm = GetComponentInParent<GameManager>();
 
@@ -29,13 +29,13 @@ public class ObjectManager : MonoBehaviour
         addVillager(1, -1, "Villager");
         addVillager(2, -1, "Villager");
     }
-	
-	
-	void Update ()
+
+
+    void Update()
     {
         checkCollsions();
         removeDead();
-	}
+    }
 
     public bool purchaseBuilding(Building building)
     {
@@ -61,7 +61,7 @@ public class ObjectManager : MonoBehaviour
                 }
             }
         }
-        
+
         if (hasWood && hasStone && hasVillager)
         {
             int woodCost = building.woodCost;
@@ -117,7 +117,7 @@ public class ObjectManager : MonoBehaviour
                     break;
                 }
             }
-        }    }
+        } }
 
     public void addMonster(int x, int y, string type)
     {
@@ -127,12 +127,25 @@ public class ObjectManager : MonoBehaviour
             monster.transform.Translate(new Vector2(x, y));
             monsters.Add(monster);
         }
+        else if (type.Equals("Chicken"))
+        {
+            GameObject monster = Instantiate(Resources.Load("Prefabs/Chicken", typeof(GameObject))) as GameObject;
+            monster.transform.Translate(new Vector2(x, y));
+            monsters.Add(monster);
+        }
+        else if (type.Equals("Golem"))
+        {
+            GameObject monster = Instantiate(Resources.Load("Prefabs/Golem", typeof(GameObject))) as GameObject;
+            monster.transform.Translate(new Vector2(x, y));
+            monsters.Add(monster);
+        }
     }
 
     //***NOTE: We will need to later check the difference in y and adjust z so that walls appear behind when >y and <y when in front
-    public void addBuilding(int x, int y, string type)
+    public bool addBuilding(int x, int y, string type)
     {
         GameObject building = null;
+        bool added = true;
         if (type.Equals("Wood Wall"))
         {
             building = Instantiate(Resources.Load("Prefabs/wallWood", typeof(GameObject))) as GameObject;
@@ -156,6 +169,9 @@ public class ObjectManager : MonoBehaviour
         else if (type.Equals("Castle"))
         {
             building = Instantiate(Resources.Load("Prefabs/castle", typeof(GameObject))) as GameObject;
+            building.GetComponent<UtilityBuilding>().currentFood = 500;
+            building.GetComponent<UtilityBuilding>().currentWood = 500;
+            building.GetComponent<UtilityBuilding>().currentStone = 500;
         }
         else if (type.Equals("Arrow Tower"))
         {
@@ -177,11 +193,12 @@ public class ObjectManager : MonoBehaviour
             }
             else
             {
+                added = false;
                 Debug.Log("You broke bitch");
                 Destroy(building);
             }
         }
-        
+        return added;
     }
 
     private void checkCollsions()
@@ -189,7 +206,7 @@ public class ObjectManager : MonoBehaviour
         // Villagers x Monsters
         foreach (GameObject vilObj in villagers)
         {
-            Villager villager = vilObj.GetComponent(typeof (Villager)) as Villager;
+            Villager villager = vilObj.GetComponent(typeof(Villager)) as Villager;
             BoxCollider2D villagerBounds = vilObj.GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
             CircleCollider2D villagerRange = vilObj.GetComponentInChildren(typeof(CircleCollider2D)) as CircleCollider2D;
             foreach (GameObject monObj in monsters)
@@ -241,7 +258,7 @@ public class ObjectManager : MonoBehaviour
                         }
                     }
                 }
-            } 
+            }
         }
         //Villager x Zones
         foreach (GameObject vilObj in villagers)
@@ -323,6 +340,48 @@ public class ObjectManager : MonoBehaviour
                 {
                     monster.attack(building);
                 }
+            }
+        }
+    }
+
+    public void populate()
+    {
+        foreach (GameObject obj in buildings)
+        {
+            UtilityBuilding bui = obj.GetComponent(typeof(UtilityBuilding)) as UtilityBuilding;
+            if (bui != null)
+            {
+                if (bui.currentVillagers < bui.villagerStorage)
+                {
+                    addVillager((int)obj.transform.position.x, (int)obj.transform.position.y - 5, "Villager");
+                }
+            }
+        }
+    }
+    
+    public void returnHome()
+    {
+        foreach (GameObject obj in villagers)
+        {
+            Villager vil = GetComponent(typeof(Villager)) as Villager;
+            if (vil != null)
+            {
+                if (vil.inGatherZone)
+                {
+                    vil.returnLoad();
+                }
+            }
+        }
+    }
+
+    public void heal()
+    {
+        foreach (GameObject obj in villagers)
+        {
+            Villager vil = obj.GetComponent<Villager>();
+            if (vil.hp < vil.mhp)
+            {
+                vil.hp++;
             }
         }
     }

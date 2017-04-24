@@ -20,8 +20,48 @@ public class CameraController : MonoBehaviour {
      */
 	void Update ()
     {
-        Vector2 move = new Vector2(Input.GetAxis("Horizontal") * speed, Input.GetAxis("Vertical") * speed);
-        camera.transform.Translate(move);
-        camera.orthographicSize += Input.GetAxis("Mouse ScrollWheel");
+        if (camera.transform.position.x > 90)
+        {
+            Vector3 v = camera.transform.position;
+            v.x = 89;
+            camera.transform.position = v;
+        }
+        if (camera.transform.position.x < -90)
+        {
+            Vector3 v = camera.transform.position;
+            v.x = -89;
+            camera.transform.position = v;
+        }
+        if (camera.transform.position.y > 90)
+        {
+            Vector3 v = camera.transform.position;
+            v.y = 89;
+            camera.transform.position = v;
+        }
+        if (camera.transform.position.y < -90)
+        {
+            Vector3 v = camera.transform.position;
+            v.y = -89;
+            camera.transform.position = v;
+        }
+        if (camera.orthographicSize > 25)
+        {
+            camera.orthographicSize = 25;
+        }
+        if (camera.orthographicSize < 10)
+        {
+            camera.orthographicSize = 10;
+        }
+
+        if (camera.transform.position.x <= 90 && camera.transform.position.x >= -90)
+        {
+            if (camera.transform.position.y <= 90 && camera.transform.position.y >= -90)
+            {
+                Vector2 move = new Vector2(Input.GetAxis("Horizontal") * speed, Input.GetAxis("Vertical") * speed);
+                camera.transform.Translate(move);
+                camera.orthographicSize += Input.GetAxis("Mouse ScrollWheel") * -2;
+            } 
+        }     
+        
     }
 }
