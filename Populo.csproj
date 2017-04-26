@@ -85,6 +85,7 @@
     <Compile Include="Assets\Scripts\ObjectManager.cs" />
     <Compile Include="Assets\Scripts\Pathfinder.cs" />
     <Compile Include="Assets\Scripts\RenderController.cs" />
+    <Compile Include="Assets\Scripts\UIManager.cs" />
     <Compile Include="Assets\Scripts\UtilityBuilding.cs" />
     <Compile Include="Assets\Scripts\Villager.cs" />
   </ItemGroup>

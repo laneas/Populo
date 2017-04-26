@@ -304,13 +304,17 @@ public class UIManager : MonoBehaviour
             }
             else if (bui.type.Equals("Wood House"))
             {
-                gm.om.addBuilding((int)gm.leftSelection.transform.position.x, (int)gm.leftSelection.transform.position.y, "Stone House");
-                bui.hp = 0;
+                if (gm.om.addBuilding((int)gm.leftSelection.transform.position.x, (int)gm.leftSelection.transform.position.y, "Stone House"))
+                {
+                    gm.leftSelection.GetComponent<Building>().hp = 0;
+                }
             }
             else if (bui.type.Equals("Arrow Tower"))
             {
-                gm.om.addBuilding((int)gm.leftSelection.transform.position.x, (int)gm.leftSelection.transform.position.y, "Cannon Tower");
-                bui.hp = 0;
+                if (gm.om.addBuilding((int)gm.leftSelection.transform.position.x, (int)gm.leftSelection.transform.position.y, "Cannon Tower"))
+                {
+                    gm.leftSelection.GetComponent<Building>().hp = 0;
+                }
             }
         }
     }

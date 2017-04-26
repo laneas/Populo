@@ -187,7 +187,7 @@ public class GameManager : MonoBehaviour
     IEnumerator increaseTime()
     {
         increaseTimeOn = true;
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(.25f);
         seconds++;
         if (seconds == 30)
         {
